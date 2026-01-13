@@ -1,0 +1,106 @@
+﻿Pregoway: API Specification & Multi-User Data Flow
+This document provides a deep dive into the Pregoway API architecture, detailing endpoint logic, complex data structures, and the predictive flow that connects different user roles (Mother, Doctor, Caregiver).
+1. Global API Architecture
+* Base URL: https://api.pregoway.ai/v1
+* Auth Scheme: Bearer Token (JWT) + Fingerprint/FaceID for medical data access.
+* Protocol: REST for standard operations; WebSockets for real-time critical risk alerts.
+2. Core API Endpoints
+A. Authentication & Persona Management (/auth)
+Method
+	Endpoint
+	Description
+	Complex Logic
+	POST
+	/otp/send
+	Send 6-digit SMS code
+	Rate-limited to 3 attempts per 15 mins.
+	POST
+	/otp/verify
+	Returns JWT + User Role
+	Identifies if user is Mother, Doctor, or Caregiver.
+	PATCH
+	/profile/setup
+	Initialize pregnancy meta
+	Triggers calculate_initial_baseline on the AI engine.
+	GET
+	/caregiver/link-code
+	Generate 8-digit sync code
+	Used by "Priya" to link "Husband/Mother-in-law".
+	B. Adaptive Health Engine (/health)
+Method
+	Endpoint
+	Description
+	Data Structure / Logic
+	GET
+	/checkin/questions
+	Fetch daily questionnaire
+	Adaptive Logic: Checks current_risk and last_answers. Returns 5 questions if Green, 12 if Red.
+	POST
+	/checkin/submit
+	Submit symptom logs
+	Triggers Async ML processing. Returns immediate streak update.
+	GET
+	/vitals/trends
+	Fetch historical metrics
+	Aggregates SQL (vitals) and MongoDB (symptoms) into a time-series JSON.
+	C. Document Vault & OCR (/vault)
+Method
+	Endpoint
+	Description
+	Implementation Details
+	POST
+	/upload
+	Multipart file upload
+	Uploads to S3 -> Triggers Lambda OCR -> Returns document_id.
+	GET
+	/ocr/results/{id}
+	Poll for extraction results
+	Returns JSON with confidence scores per metric (e.g., HB, Glucose).
+	PUT
+	/ocr/verify/{id}
+	User confirms/edits OCR data
+	Updates the Master health_metrics table with verified=true.
+	3. Complex Data Structures
+The "Risk Payload" Object
+This object is the heart of the predictive system, passed between the AI Engine and the Frontend.
+{
+  "user_id": "uuid-123",
+  "current_score": 68,
+  "category": "ORANGE",
+  "prediction_target": "Pre-eclampsia",
+  "lead_time_estimate": "14 days",
+  "contributing_factors": [
+    {"metric": "BP_Systolic", "velocity": "+5mmHg/week", "weight": 0.4},
+    {"metric": "Symptom_Headache", "frequency": "3/7 days", "weight": 0.3},
+    {"metric": "Protein_Urine", "status": "Positive", "weight": 0.3}
+  ],
+  "recommended_actions": [
+    {"type": "APPOINTMENT", "urgency": "HIGH", "action": "Schedule BP Profiling"},
+    {"type": "MEDICATION", "action": "Start low-dose Aspirin", "requires_doctor": true}
+  ]
+}
+
+
+4. Multi-User Data Flow Logic
+Scenario: Risk Escalation (Mother -> Doctor -> Caregiver)
+1. Mother (Priya) submits a Daily Check-in via POST /checkin/submit.
+2. AI Engine runs analyze_risk(). It detects a trend.
+3. Backend Action:
+   * Update Mother's UI: WS_EMIT('risk_update') changes her Dashboard to Orange.
+   * Alert Doctor: Pushes record to /doctor/alerts/priority queue.
+   * Task Caregiver: POST /notifications/caregiver sends SMS: "Priya needs extra rest today. Ensure she takes her 2 PM medication."
+The "Adaptive Journey" Trigger
+When category changes to RED:
+* API automatically calls POST /timeline/replan.
+* Logic: Logic-tree lookup (e.g., IF "Pre-eclampsia" AND "Week 32+" THEN add "Biophysical Profile" scan every 48 hours).
+* Timeline reflects new required tasks immediately without doctor manual input (awaiting verification).
+5. Security & Privacy Flow (DISHA/HIPAA)
+* Data At Rest: AES-256 Encryption on S3 and RDS.
+* Role-Based Access Control (RBAC):
+   * Mother: Full Read/Write.
+   * Doctor: Read all medical + Write clinical notes.
+   * Caregiver: Read "Status" (Green/Yellow/Red) + Read "Task List". Cannot see specific lab values (HB/Glucose) unless Mother toggles "Detailed Sharing".
+6. Offline-First Sync Strategy
+1. Local Save: When the rural user (Lakshmi) is offline, IndexedDB stores the Check-in JSON.
+2. Background Sync: Service Worker detects connectivity and calls POST /sync/batch.
+3. Conflict Resolution: "Server-Wins" for medical baseline data; "Client-Merge" for daily symptoms logs.

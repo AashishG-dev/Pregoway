@@ -1,0 +1,95 @@
+﻿Pregoway: Technical Blueprint & Method Mapping
+This document outlines the software architecture, file structure, and functional logic for the Pregoway Maternal Health System.
+1. System Architecture Overview
+* Frontend: React.js (PWA) with Tailwind CSS for high responsiveness and offline-first capabilities.
+* Backend: Python (FastAPI) for high-performance async processing of AI models.
+* AI/ML: Python-based microservices for Risk Prediction (XGBoost) and OCR (Tesseract/Custom).
+* Database:
+   * PostgreSQL: Structured user profiles, medical history, and appointments.
+   * MongoDB: Unstructured daily check-in logs and raw AI telemetry.
+   * Redis: Real-time risk score caching and session management.
+2. Recommended File Structure
+Backend (FastAPI)
+/backend
+├── app/
+│   ├── api/                # Route handlers
+│   │   ├── auth.py         # Login, OTP, Registration
+│   │   ├── health.py       # Metrics, Vitals, Check-ins
+│   │   ├── risk.py         # AI Risk Engine triggers
+│   │   └── documents.py    # OCR and Vault management
+│   ├── core/               # Config, Security, DB session
+│   ├── services/           # Business Logic & AI Integration
+│   │   ├── ml_engine.py    # Risk Prediction logic
+│   │   ├── ocr_service.py  # Image processing for reports
+│   │   └── alerts.py       # Notification & SMS logic
+│   ├── models/             # SQLAlchemy/Pydantic schemas
+│   └── main.py             # Entry point
+
+Frontend (React/PWA)
+/frontend
+├── src/
+│   ├── components/         # Reusable UI (Cards, ProgressRings)
+│   ├── hooks/              # Custom logic (useAuth, useRiskData)
+│   ├── pages/              # Main Screens
+│   │   ├── Dashboard/      # Home Hub
+│   │   ├── CheckIn/        # Dynamic Questionnaire
+│   │   ├── Timeline/       # Pregnancy Journey
+│   │   └── Vault/          # Documents Hub
+│   ├── store/              # State management (Zustand or Redux)
+│   └── App.js              # Routing & Auth Guard
+
+3. Core Method Mapping & Logic
+A. Authentication & Onboarding (api/auth.py)
+* send_otp(phone_number: str)
+   * Purpose: Triggers SMS gateway to send a 6-digit verification code.
+* verify_otp(phone_number: str, code: str)
+   * Purpose: Authenticates user and returns a JWT token.
+* initialize_profile(user_id, profile_data: dict)
+   * Purpose: Saves LMP (Last Menstrual Period), calculates EDD (Expected Due Date), and sets initial risk baseline.
+B. AI Risk Engine (services/ml_engine.py)
+* calculate_risk_score(user_id: str)
+   * Implementation: Fetches latest lab reports + last 7 days of symptoms + vitals.
+   * Logic: Inputs data into the XGBoost model to output a probability (0-100%) for Pre-eclampsia, GDM, and Anemia.
+* trigger_adaptive_replanning(user_id: str, risk_category: str)
+   * Purpose: If risk moves to "Orange" or "Red", this function automatically inserts new appointments (e.g., Growth Scan) into the health_timeline table.
+C. Daily Check-In (api/health.py)
+* get_adaptive_questions(user_id: str)
+   * Logic: Returns a dynamic JSON of questions. If user.risk_profile is "High-Risk BP", it adds questions about "Vision changes" or "Severe Headaches".
+* submit_daily_checkin(user_id: str, answers: list)
+   * Implementation: Saves answers to MongoDB; immediately calls calculate_risk_score to provide real-time feedback on the Results screen.
+D. Document Intelligence (services/ocr_service.py)
+* process_lab_report(image_bytes: bytes, language: str)
+   * Implementation: Uses Tesseract/EasyOCR to detect text -> NLP model extracts key-value pairs (e.g., Hemoglobin: 11.2) -> Maps to standard clinical ranges.
+* get_health_trends(user_id: str, metric_name: str)
+   * Purpose: Aggregates all OCR data for a specific metric (e.g., Blood Glucose) over time for visualization on the Dashboard.
+E. Frontend State Hooks (hooks/)
+* usePregnancyJourney()
+   * Methods: getWeek(), getDaysToEDD(), getBabySizeCategory().
+* useRiskStatus()
+   * Purpose: Subscribes to the risk score state and returns color codes (Green/Yellow/Red) and the specific AI insight text for the Dashboard banner.
+4. Data Flow Logic: The "Predictive" Loop
+1. Input: User uploads a report or completes a check-in.
+2. Process: submit_daily_checkin -> ocr_service extracts data.
+3. Analyze: ml_engine compares new data against the user's historical baseline (velocity of change).
+4. Action:
+   * Low Risk: Update Dashboard with "Safe" (Green).
+   * High Risk: Trigger send_emergency_alert to Doctor/Family and update health_timeline with urgent scan.
+5. Key Database Tables (Summary)
+Table
+	Key Fields
+	Purpose
+	users
+	uid, phone, preferred_lang, risk_baseline
+	Identity & Preferences
+	pregnancy_meta
+	user_id, lmp_date, edd, doctor_id, current_week
+	Core pregnancy state
+	health_metrics
+	user_id, type (BP/HB), value, unit, source (OCR/Manual)
+	Clinical data points
+	risk_logs
+	user_id, score, risk_type, triggers, timestamp
+	Audit trail of AI decisions
+	health_timeline
+	user_id, event_type, date, status (Pending/Done)
+	The dynamic journey map

@@ -1,0 +1,88 @@
+﻿Pregoway: MongoDB Database Architecture & Schema Design
+Pregoway utilizes MongoDB as its primary data store to handle the high-velocity, semi-structured data typical of maternal health tracking (daily symptoms, OCR outputs, and AI-driven risk logs).
+1. Database Strategy: Why MongoDB?
+1. Adaptive Schema: The "Daily Check-In" questions change based on a user's risk level. MongoDB allows us to store these varying response sets in a single collection without complex SQL migrations.
+2. Hierarchical Data: Pregnancy data (vitals, symptoms, milestones) is naturally nested. Storing these together in documents reduces the need for expensive "Joins."
+3. Horizontal Scalability: Essential for supporting millions of users across rural and urban India using sharding.
+2. Core Collections & Mongoose Schemas
+A. Users & Personas (users)
+Stores identity, role-based access, and primary pregnancy metadata.
+* const UserSchema = new Schema({
+*   phone: { type: String, required: true, unique: true }, // +91 prefix
+*   role: { type: String, enum: ['mother', 'doctor', 'caregiver', 'asha'], default: 'mother' },
+*   preferredLanguage: { type: String, default: 'en' },
+*   pregnancyMeta: {
+*     lmpDate: Date,
+*     eddDate: Date,
+*     currentWeek: Number,
+*     hospitalId: String,
+*     riskBaseline: Map // Stores initial complications reported during onboarding
+*   },
+*   careTeam: [{
+*     userId: { type: Schema.Types.ObjectId, ref: 'User' },
+*     role: String // e.g., 'Primary OB-GYN', 'Husband'
+*   }],
+*   createdAt: { type: Date, default: Date.now }
+* });
+
+
+B. Daily Check-Ins (daily_checkins)
+Stores symptom logs. We use a flexible array to handle adaptive questioning.
+* const CheckInSchema = new Schema({
+*   userId: { type: Schema.Types.ObjectId, ref: 'User', index: true },
+*   timestamp: { type: Date, default: Date.now },
+*   weekOfPregnancy: Number,
+*   responses: [{
+*     qId: String,      // e.g., 'headache_severity'
+*     value: Schema.Types.Mixed, // Can be Number, String, or Boolean
+*     metadata: Map     // e.g., location of pain or photo URL
+*   }],
+*   aiAnalysis: {
+*     riskImpact: { type: String, enum: ['low', 'medium', 'high'] },
+*     insightGenerated: String
+*   }
+* });
+
+
+C. Clinical Vitals & OCR Data (health_metrics)
+Stores structured lab values extracted via OCR or manual entry.
+* const MetricSchema = new Schema({
+*   userId: { type: Schema.Types.ObjectId, ref: 'User', index: true },
+*   metricType: { type: String, enum: ['HB', 'BP_SYS', 'BP_DIA', 'GLUCOSE', 'WEIGHT'] },
+*   value: Number,
+*   unit: String,
+*   source: { type: String, enum: ['manual', 'ocr', 'iot'] },
+*   documentId: String, // Reference to the file in the Document Vault
+*   isVerified: { type: Boolean, default: false }, // Verified by Doctor or User
+*   recordedAt: Date
+* });
+
+
+D. AI Risk Logs (risk_engine_logs)
+The "Audit Trail" for predictive alerts.
+* const RiskLogSchema = new Schema({
+*   userId: { type: Schema.Types.ObjectId, ref: 'User', index: true },
+*   score: Number, // 0-100
+*   category: { type: String, enum: ['GREEN', 'YELLOW', 'ORANGE', 'RED'] },
+*   triggers: [String], // e.g., ["Rising BP trend", "Persistent headache"]
+*   prediction: {
+*     target: String, // e.g., "Pre-eclampsia"
+*     probability: Number,
+*     estimatedLeadTime: String
+*   },
+*   model_version: String,
+*   createdAt: { type: Date, default: Date.now }
+* });
+
+
+3. Data Flow & Indexing Strategy
+Critical Query Patterns
+To ensure the app remains fast even with poor rural connectivity, we apply the following indexes:
+1. Compound Index on Vitals: db.health_metrics.createIndex({ userId: 1, recordedAt: -1 }) — for fast trend-graph rendering.
+2. TTL Index for Alerts: db.notifications.createIndex({ "expiresAt": 1 }, { expireAfterSeconds: 0 }) — to automatically clear old transient alerts.
+3. Geospatial Index: db.hospitals.createIndex({ location: "2dsphere" }) — for routing users to the nearest NICU-equipped facility during emergencies.
+4. Security & Privacy
+* Field-Level Encryption: Sensitive PII (Names, Phone numbers) can be encrypted using MongoDB Client-Side Field Level Encryption (CSFLE).
+* Data Isolation: Multi-tenancy is handled at the application layer; every query is scoped by userId.
+* Audit Logging: Every change to health_metrics is mirrored in an audit_trail collection to comply with DISHA (Digital Information Security in Healthcare Act) standards.
+*

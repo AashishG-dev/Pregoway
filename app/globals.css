@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #fdf2f8;
+  --color-brand-100: #fce7f3;
+  --color-brand-200: #fbcfe8;
+  --color-brand-500: #ec4899;
+  --color-brand-600: #db2777;
+  --color-brand-700: #be185d;
+
+  --color-risk-green: #22c55e;
+  --color-risk-yellow: #eab308;
+  --color-risk-orange: #f97316;
+  --color-risk-red: #ef4444;
+
+  --color-ai-light: #f3e8ff;
+  --color-ai-DEFAULT: #a855f7;
+  --color-ai-dark: #7e22ce;
+  
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui;
+
+  --animate-blob: blob 7s infinite;
+
+  @keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
+  }
+}
+
+/* Custom utilities if needed */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -1,0 +1,1251 @@
+﻿Pregoway: Predictive Maternal Health System
+Blueprint Document v1.1
+Executive Summary
+Pregoway is not a pregnancy tracker—it's a predictive maternal mortality prevention system powered by
+adaptive AI. While existing apps track appointments, Pregoway predicts complications 2-4 weeks before they
+become life-threatening and dynamically adjusts the pregnancy journey to prevent maternal and infant deaths.
+The Problem: 45,000 Indian women die annually during pregnancy. 60% of these deaths are predictable but
+currently go undetected until emergency situations arise.
+Our Solution: An AI system that learns from daily patient interactions, analyzes patterns invisible to human
+observation, and intervenes before complications become fatal.
+Market Gap: No existing system combines predictive analytics, adaptive journey planning, and inclusive
+design for rural India.
+Core Innovation: What Doesn't Exist Yet
+1. Predictive Risk Engine (Not Reactive Tracking)
+Current Systems: Track appointments, send reminders (reactive)
+Pregoway: Predicts pre-eclampsia, gestational diabetes, hemorrhage risk, fetal distress 2-4 weeks before
+clinical diagnosis
+How: AI analyzes micro-trends in blood reports, daily symptom patterns, vital sign velocities that doctors miss
+Example: Patient reports "mild headache" 3 days in a row + BP rising 2mmHg weekly + slight hand swelling
+→ AI flags 68% pre-eclampsia probability → Immediate intervention scheduled
+2. Adaptive Journey Replanning (Dynamic Protocol Adjustment)
+Current Systems: Fixed 9-month appointment schedule
+Pregoway: Journey changes in real-time based on risk evolution
+How: If gestational diabetes detected at Week 20 (vs standard Week 28 test), entire remaining journey auto-
+adjusts: adds dietician, extra scans, changes delivery hospital to NICU-equipped facility
+Impact: Proactive management vs crisis response
+3. Multi-Modal Pattern Recognition
+Current Systems: Analyze single data points (BP reading, glucose level)
+Pregoway: Combines 15+ data streams to detect danger patterns
+Data Sources:
+Lab report trends (velocity of change, not just values)
+Daily symptom progression
+Sleep quality patterns
+Fetal movement changes
+Weight gain acceleration
+Voice stress biomarkers (future)
+Medication adherence
+Even weather/season (heat stress correlation)
+Example: Individual symptoms seem minor, but combination triggers alert: fatigue + reduced fetal movement +
+pale complexion in photos = anemia + possible fetal distress
+4. Rural India-First Design (Truly Inclusive)
+Current Systems: English-only, assume typed digital reports, require constant internet
+Pregoway Innovations:
+Handwritten Report Input: Take photo of doctor's handwritten prescription/report → AI extracts data in
+12+ Indian languages
+Manual Data Entry: Family member can input data if patient is illiterate
+Voice-First Interface: Answer questions by speaking in Hindi/Tamil/Bengali/Telugu/Marathi/Gujarati
+Offline-First Architecture: All features work without internet, sync when available
+SMS Fallback: Critical alerts via SMS if no app access
+Shared Device Model: One family device can manage multiple pregnancies
+Low Data Consumption: < 5MB monthly data usage
+5. Intelligent Document Locker with Auto-Extraction
+Current Systems: Store PDFs, require manual reading
+Pregoway:
+Smart OCR: Extracts values from lab reports (typed or handwritten) in any Indian language
+Auto-Trending: Tracks hemoglobin, BP, glucose, thyroid across all reports automatically
+Visual Alerts: "Your hemoglobin dropped 15% in 2 weeks" with graph
+Doctor Comparison: Highlights abnormal values with color coding
+Family Sharing: Controlled access for husband/mother to view reports
+6. Daily Adaptive Questionnaire (Gets Smarter)
+Current Systems: Fixed daily questions for all users
+Pregoway: AI asks different questions based on individual risk profile
+How It Adapts:
+Low-risk patient: 5 basic questions (sleep, fetal movement, energy)
+High-risk patient: 12 targeted questions (vision changes, swelling severity, headache location)
+Questions change based on yesterday's answers
+If patient reports new symptom, follow-up questions appear next day
+Compliance Gamification: Streaks, badges, weekly summary for motivation
+7. Predictive Alerts (Before Crisis Happens)
+Current Systems: Alert after problem occurs (reactive)
+Pregoway: Warns 2-7 days before symptoms worsen
+Examples:
+"Based on your BP trend, you might experience severe headaches by Friday. We've scheduled urgent
+check-up tomorrow."
+"Your baby's movement pattern has shifted. This could indicate distress. Do kick count test now."
+"Hemoglobin dropping rapidly. Expect extreme fatigue this weekend. Iron supplements prescribed."
+8. Doctor AI Co-Pilot Dashboard
+Current Systems: Doctors read reports manually
+Pregoway: AI highlights critical patterns, suggests interventions
+Features:
+Risk Summary: "Patient X - 67% pre-eclampsia probability based on 14-day trend"
+Automated Flags: "Urgent: Fetal movement reduced 40% in 3 days"
+Treatment Suggestions: "Consider prescribing aspirin to reduce pre-eclampsia risk (evidence-based)"
+Compliance Tracking: "Patient missed 3 medications this week - intervention needed"
+Outcome Prediction: "If current trajectory continues, C-section recommended by Week 37"
+9. Family Caregiver Network Integration
+Current Systems: Only patient gets information
+Pregoway: Involves support system proactively
+Features:
+Husband/Mother Dashboard: Simplified view of patient status
+Task Assignments: "Ensure she takes iron tablet after lunch today"
+Emergency Protocols: "If she reports these 3 symptoms, take her to hospital immediately"
+Appointment Reminders: Family gets reminders to arrange transportation
+Risk Escalation: "Her risk score increased - watch for warning signs"
+10. Hyperlocal Hospital Routing
+Current Systems: Patient chooses hospital
+Pregoway: AI recommends hospital based on risk + capability
+How:
+Low-risk pregnancy → Nearby clinic adequate
+High-risk (twins, pre-eclampsia) → Routes to hospital with NICU, blood bank, specialist
+Emergency mode → Finds nearest facility with ICU bed availability in real-time
+Considers: Distance, traffic, hospital equipment, doctor availability
+Feature Breakdown: What We're Building
+Phase 1: MVP (Hackathon Demo)
+Core Features:
+1. Secure Document Vault
+Upload reports (PDF/photo)
+OCR extraction (English + Hindi)
+Manual data entry option
+Trend visualization
+2. Daily Health Check-In
+5-7 questions daily
+Voice input option (Hindi/English)
+Photo uploads (swelling, discharge)
+Mood tracking
+3. Basic Risk Scoring
+Algorithm analyzes: lab values, symptoms, week of pregnancy
+Risk categories: Green/Yellow/Orange/Red
+Updates every 24 hours
+4. Journey Timeline
+Visual calendar of appointments
+Doctor visits, tests, vaccinations
+Educational content per week
+5. WhatsApp Integration
+Daily reminders
+Appointment notifications
+Critical alerts
+Demo Capabilities:
+Show risk prediction accuracy with historical data
+Demonstrate journey replanning when risk detected
+Display multi-language support
+Prove handwritten report OCR extraction
+Phase 2: Advanced Intelligence (Post-Hackathon)
+Enhanced Features:
+1. Predictive Analytics Engine
+Train on 10,000+ pregnancy outcomes
+Predict: pre-eclampsia, gestational diabetes, hemorrhage, preterm labor
+Accuracy target: 80%+ with 2-4 week lead time
+2. Adaptive Questionnaire AI
+Questions personalized per patient risk
+Natural language processing for text answers
+Sentiment analysis for mental health screening
+3. Multi-Language Expansion
+Support 12 Indian languages (Hindi, Bengali, Telugu, Marathi, Tamil, Gujarati, Urdu, Kannada,
+Odia, Malayalam, Punjabi, Assamese)
+Voice input/output in all languages
+Handwritten report OCR in regional languages
+4. Offline-First Architecture
+All features work without internet
+Smart sync when connectivity available
+<5MB monthly data usage
+SMS fallback for zero-data scenarios
+5. Wearable Integration
+Connect BP monitors, glucose meters, pulse oximeters
+Auto-import readings
+Continuous monitoring for high-risk patients
+6. Telemedicine Integration
+Video consultation with doctors
+Share reports during call
+AI generates consultation summary
+7. Community Health Worker Portal
+ASHA workers can input data for patients
+Bulk patient monitoring
+Village-level health dashboard
+Phase 3: Ecosystem Play (6-12 Months)
+1. Hospital EMR Integration
+Bidirectional data flow with hospital systems
+Auto-import test results
+Discharge summary extraction
+2. Insurance Integration
+Auto-claim filing for deliveries
+Preventive care coverage tracking
+Cashless delivery coordination
+3. Pharmacy Network
+Medicine delivery coordination
+Prescription refill reminders
+Generic alternatives suggestions
+4. Government Scheme Integration
+Auto-apply for PMMVY (maternity benefit)
+Track Janani Suraksha Yojana payments
+Link to Ayushman Bharat for cashless care
+5. Research Platform
+Anonymized data for maternal health research
+Clinical trial matching
+Outcome tracking for medical studies
+Technical Architecture
+Frontend Stack:
+Web App: React.js with Progressive Web App (PWA) capabilities
+Responsive Design: Mobile-first, works on all devices
+Voice: Web Speech API (multi-language)
+Offline: Service Workers + IndexedDB
+UI Framework: Material-UI / Tailwind CSS
+Backend Stack:
+API: Python FastAPI (async, high-performance)
+Database: PostgreSQL (structured) + MongoDB (unstructured)
+File Storage: AWS S3 (encrypted)
+Cache: Redis (risk scores, real-time data)
+Queue: Celery + RabbitMQ (async tasks)
+AI/ML Stack:
+Risk Prediction: XGBoost, Random Forest (interpretable models)
+Time Series: LSTM networks (trend analysis)
+NLP: BERT/Indic-BERT (text analysis in Indian languages)
+Computer Vision: ResNet/EfficientNet (ultrasound, photo analysis)
+OCR: Tesseract + custom-trained model for handwriting
+Training: TensorFlow/PyTorch
+Deployment: ONNX Runtime (optimized web inference)
+Infrastructure:
+Cloud: AWS (scalable, HIPAA-compliant options)
+CDN: CloudFront (fast content delivery)
+Monitoring: Sentry + DataDog
+Security: AES-256 encryption, HIPAA/DISHA compliance
+APIs & Integrations:
+WhatsApp: Business API for messaging
+SMS: Twilio for fallback alerts
+Maps: Google Maps API (hospital routing)
+Translation: Google Translate API (12 languages)
+Payment: Razorpay (subscriptions, insurance)
+Competitive Advantage: Why We're Different
+Feature BabyChakra Practo Pregoway
+Predictive Risk Scoring ❌ ❌ ✅ 2-4 week advance warning
+Adaptive Journey Replanning ❌ ❌ ✅ Real-time protocol adjustment
+Handwritten Report OCR ❌ ❌ ✅ 12 languages
+Offline-First ❌ ❌ ✅ Full functionality
+Rural-Focused Design ❌ ❌ ✅ Voice + SMS + low data
+Family Caregiver Integration ❌ ❌ ✅ Multi-stakeholder alerts
+AI Doctor Co-Pilot ❌ Partial ✅ Clinical decision support
+Daily Pattern Recognition ❌ ❌ ✅ Multi-modal AI
+None of our competitors predict outcomes. They only track inputs.
+Impact Metrics (What Success Looks Like)
+Year 1 Goals:
+100,000 pregnancies managed
+80%+ risk prediction accuracy
+50% reduction in preventable complications among users
+95% daily check-in compliance
+Presence in 100 hospitals across 10 states
+Year 3 Vision:
+5 million pregnancies managed
+10,000 maternal deaths prevented (vs expected outcomes)
+Partnership with National Health Mission
+Published research in peer-reviewed journals
+Expansion to other maternal-child health areas
+Measurable Outcomes:
+Maternal Mortality Reduction: Track deaths among users vs national average
+Complication Detection Lead Time: Days between AI alert and clinical diagnosis
+Hospital Admission Optimization: Reduction in emergency admissions, increase in planned
+interventions
+Cost Savings: Reduced ICU stays, fewer emergency C-sections
+Patient Satisfaction: NPS score, retention rate
+Go-To-Market Strategy
+Phase 1: Hospital Partnerships (B2B)
+Partner with 10-20 maternity hospitals
+Offer free pilot for 6 months
+Prove outcome improvements
+Revenue model: ₹200-500 per pregnancy (hospital pays)
+Phase 2: Direct to Consumer (B2C)
+Freemium model: Basic tracking free, predictive features ₹999 for 9 months
+Target: Urban educated women initially
+Marketing: Content on pregnancy complications, testimonials
+Growth: Referral program (refer friend, both get 1 month free)
+Phase 3: Government Integration (B2G)
+Pilot with state governments (Maharashtra, Karnataka)
+Position as PMMVY digital platform
+Scale to national program
+Revenue: Per-user licensing to government
+Phase 4: Insurance Model
+Partner with health insurance companies
+Reduce their maternal claim costs
+Insurance covers subscription for policyholders
+Revenue: Per-user fee from insurer
+Monetization Model
+Revenue Streams:
+1. Hospital Subscriptions: ₹300-500 per pregnancy managed
+2. Patient Subscriptions: ₹999 for 9-month premium access
+3. Government Contracts: ₹50-100 per beneficiary annually
+4. Insurance Partnerships: ₹200-300 per insured pregnancy
+5. Data Licensing: Anonymized research data to pharma/research institutions
+6. Telemedicine Commissions: 20% of consultation fees
+Unit Economics (Year 2):
+Customer Acquisition Cost: ₹500 (hospital) / ₹200 (direct)
+Lifetime Value: ₹2,500 per pregnancy
+Gross Margin: 70%
+Payback Period: 2 months
+Regulatory & Compliance
+Medical Device Classification:
+Applying for Class B Medical Device (CDSCO, India)
+Software as Medical Device (SaMD) approval process
+Timeline: 12-18 months for full approval
+Data Privacy:
+DISHA Compliance: Digital Information Security in Healthcare Act
+HIPAA Equivalent: International standards for global expansion
+End-to-end encryption
+Patient data ownership and portability
+Right to delete data
+Clinical Validation:
+Prospective clinical trial with 1,000 patients
+Compare outcomes: Pregoway users vs standard care
+Publish results in peer-reviewed journal
+Use for marketing credibility
+Research Roadmap
+Research Questions:
+1. Can AI predict pre-eclampsia 2-4 weeks before clinical diagnosis with 80%+ accuracy?
+Study design: Retrospective analysis of 10,000 pregnancies
+Primary endpoint: Sensitivity, specificity, lead time
+2. Does daily symptom tracking improve outcome prediction vs lab-only approach?
+Study design: Compare two AI models (with vs without daily data)
+Hypothesis: Multi-modal model improves accuracy by 15%+
+3. What is the impact of adaptive journey planning on maternal mortality?
+Study design: RCT with 2,000 participants (intervention vs control)
+Primary endpoint: Maternal mortality and severe morbidity rates
+4. Can voice biomarkers predict perinatal depression?
+Study design: Record daily voice check-ins, correlate with depression screening scores
+Novelty: First Indian study on voice + maternal mental health
+Publication Strategy:
+Target journals: The Lancet Digital Health, JAMA Network Open, PLOS Medicine
+Goal: 3-4 papers in Year 1-2
+Impact: Credibility for hospital sales, government partnerships
+Team Requirements
+Founding Team:
+CEO: Healthcare/tech background, fundraising experience
+CTO: ML/AI expert, built scalable systems
+Chief Medical Officer: OB-GYN, research credentials
+Head of Product: Maternal health domain expertise
+Early Hires (0-6 months):
+2 Full-stack developers (React + Python)
+1 ML Engineer (model development)
+1 Data Scientist (research)
+1 Designer (UX for low-literacy users)
+1 Hospital Partnership Manager
+Advisors:
+Maternal health expert (AIIMS/top hospital)
+AI ethics expert
+Government health policy advisor
+VC with health-tech portfolio
+Funding Requirements
+Seed Round (₹3-5 Crore):
+Product Development: ₹1.5 Cr (team, infrastructure)
+Clinical Data Collection: ₹75 L (hospital partnerships, data acquisition)
+Regulatory: ₹50 L (CDSCO approval, legal)
+Marketing & Pilots: ₹1 Cr (hospital pilots, initial user acquisition)
+Operations: ₹25 L (6-month runway)
+Series A (₹20-30 Crore) - 18 months:
+Scale Engineering: ₹5 Cr (team expansion, infrastructure)
+Clinical Trials: ₹3 Cr (RCT for validation)
+Sales & Marketing: ₹10 Cr (B2B sales team, digital marketing)
+Geographic Expansion: ₹5 Cr (new states, languages)
+Working Capital: ₹5 Cr
+Risk Analysis & Mitigation
+Risk 1: AI Prediction Accuracy
+Risk: Model predictions are wrong, leading to false alarms or missed cases
+Mitigation:
+Conservative thresholds (prefer false positives over false negatives)
+Human-in-loop for all RED alerts
+Continuous model retraining
+Clear disclaimers: AI assists, doesn't replace doctors
+Risk 2: Regulatory Delays
+Risk: CDSCO approval takes 24+ months
+Mitigation:
+Launch as "wellness app" initially (not medical device)
+Parallel regulatory process
+Partnerships with approved hospital systems
+Risk 3: Hospital Adoption Resistance
+Risk: Doctors skeptical of AI, hospitals slow to change
+Mitigation:
+Position as "doctor assistant," not replacement
+Prove ROI with pilot data
+KOL endorsements from respected OB-GYNs
+Risk 4: Data Privacy Breach
+Risk: Sensitive health data leaked
+Mitigation:
+Bank-grade encryption
+Regular security audits
+Cyber insurance
+Minimal data retention
+Risk 5: Patient Non-Compliance
+Risk: Patients don't answer daily questions
+Mitigation:
+Gamification (streaks, rewards)
+Family involvement (reminders from husband/mother)
+Simplify to <2 minutes daily
+WhatsApp integration (where they already are)
+Success Stories (Projected Scenarios)
+Scenario 1: Pre-Eclampsia Prevention
+Patient: Priya, 28, first pregnancy, Week 24
+AI Detection: BP rising trend + protein in urine + mild headaches = 72% pre-eclampsia risk
+Intervention: Doctor prescribes aspirin, schedules weekly monitoring, plans early delivery at equipped hospital
+Outcome: Controlled pre-eclampsia, baby delivered healthy at Week 37 via planned C-section
+vs Standard Care: Without early detection, emergency C-section at Week 32, NICU admission, higher costs
+Scenario 2: Gestational Diabetes Caught Early
+Patient: Anjali, 32, overweight, family history of diabetes, Week 18
+AI Detection: Weight gain velocity + fatigue pattern + thirst increase = 68% GDM probability
+Intervention: Early glucose test (instead of Week 28), diet modification, glucose monitoring
+Outcome: Controlled GDM, normal delivery, healthy baby
+vs Standard Care: Undiagnosed until Week 28, baby macrosomia (large), emergency C-section
+Scenario 3: Rural Access Success
+Patient: Lakshmi, 22, village in Bihar, limited smartphone access, illiterate
+Solution: ASHA worker uses shared tablet, inputs Lakshmi's handwritten reports via photo OCR
+AI Detection: Severe anemia detected from pale conjunctiva in photo + fatigue reports
+Intervention: Iron infusion arranged, blood transfusion readiness at district hospital
+Outcome: Anemia corrected before delivery, safe birth
+vs Standard Care: Anemia undetected, hemorrhage during delivery, maternal death
+Conclusion: Why Pregoway Will Win
+Pregoway is not incremental innovation—it's a paradigm shift.
+We're moving maternal healthcare from:
+Reactive → Predictive
+Tracking → Preventing
+One-size-fits-all → Personalized
+Urban-only → Inclusive
+Doctor-dependent → AI-augmented
+The market is massive: 26 million pregnancies annually in India alone.
+The impact is measurable: We can directly attribute lives saved.
+The moat is defensible: Clinical validation + proprietary dataset + regulatory approval = 3-5 year lead.
+The timing is perfect: AI capabilities just reached reliability threshold, smartphone penetration hitting rural
+India, government digitizing healthcare.
+This is the future of maternal healthcare. Pregoway makes it reality today.
+Contact & Next Steps
+For Hackathon Demo: Full MVP with risk prediction on historical data, multi-language support, handwritten
+OCR showcase
+For Pilot Partners: 6-month free trial for hospitals, outcome tracking, co-published research
+For Investors: Detailed financial model, clinical trial protocol, go-to-market plan
+For Research Collaboration: Data partnership opportunities, co-authored papers
+Pregoway: Because every mother deserves to come home with her baby.
+Document Version: 1.1
+Last Updated: January 2026
+Confidential: For hackathon judges, potential partners, and investors only
+________________
+ And Pregoway: Complete UI/UX Documentation
+Version 1.0 | January 2026
+________________
+
+
+Table of Contents
+1. Design Philosophy
+2. User Personas
+3. Information Architecture
+4. Complete Page Inventory
+5. User Flows & Navigation
+6. Data Flow Architecture
+7. Component Library
+8. Accessibility & Localization
+________________
+
+
+1. Design Philosophy
+Core Principles
+* Simplicity First: Maximum 3 taps to any critical action
+* Trust & Safety: Medical-grade UI with clear data provenance
+* Inclusive Design: Works for illiterate users, poor connectivity, shared devices
+* Calm Technology: Urgent alerts are clear; routine info is gentle
+* Family-Centric: Designed for collaborative caregiving
+Visual Language
+* Color Coding:
+
+   * Green: Safe/Normal
+   * Yellow: Monitor/Caution
+   * Orange: Attention Required
+   * Red: Urgent Action Needed
+   * Purple: AI Insights
+   * Blue: Educational Content
+   * Typography:
+
+      * Primary: Inter (English) / Noto Sans (Indian languages)
+      * Headers: 24-32px, Body: 16-18px (accessibility)
+      * Line height: 1.6 (easy reading)
+      * Iconography:
+
+         * Universal symbols (minimize text dependency)
+         * Color + icon + text triple redundancy
+________________
+
+
+2. User Personas
+Primary Users
+Persona 1: Urban First-Time Mother (Priya)
+         * Age: 26-32, English/Hindi fluent
+         * Tech-savvy, smartphone user
+         * Wants: Control, information, data tracking
+         * Pain: Anxiety about complications
+Persona 2: Rural Mother (Lakshmi)
+         * Age: 20-28, regional language only
+         * Limited literacy, basic phone
+         * Needs: Simple voice interface, family support
+         * Pain: Access to quality healthcare
+Persona 3: High-Risk Mother (Anjali)
+         * Age: 30-38, previous complications
+         * Medically aware, anxious
+         * Wants: Predictive insights, specialist access
+         * Pain: Fear of repeat complications
+Secondary Users
+Persona 4: Family Caregiver (Husband/Mother-in-law)
+         * Needs: Simplified status view, task lists
+         * Wants: Know how to help without medical jargon
+         * Access: Separate role-based interface
+Persona 5: Doctor/Hospital Staff
+         * Needs: Quick patient overview, critical alerts
+         * Wants: Clinical decision support, efficiency
+         * Interface: Professional dashboard
+________________
+
+
+3. Information Architecture
+Primary Navigation Structure
+Home (Dashboard)
+├── Daily Check-In
+├── Health Timeline
+├── Documents
+├── Care Team
+└── Profile/Settings
+
+
+Bottom Navigation:
+[Home] [Check-In] [Timeline] [Documents] [More]
+
+
+Secondary Navigation
+More Menu:
+├── Care Team
+├── Family Access
+├── Hospital Finder
+├── Educational Library
+├── Emergency Contacts
+├── Settings
+└── Help & Support
+
+
+________________
+
+
+4. Complete Page Inventory
+Total Pages: 32 Core Screens + 15 Modal/Overlay Screens = 47 Screens
+________________
+
+
+ONBOARDING FLOW (6 Screens)
+Screen 1: Welcome/Splash
+Purpose: Brand introduction, load app data Elements:
+         * Pregoway logo (animated heartbeat)
+         * Tagline: "Your AI-Powered Pregnancy Companion"
+         * Language selector (12 languages)
+         * "Get Started" CTA button
+         * "Already have an account? Login" link
+Data Required: None Navigation: → Language Selection or Login
+________________
+
+
+Screen 2: Language Selection
+Purpose: Set primary language preference Elements:
+         * Header: "Choose Your Language / अपनी भाषा चुनें"
+         * Grid of 12 language cards with native scripts
+         * Voice icon: "Speak to select"
+         * "Continue" button (only active after selection)
+Data Captured: user.preferred_language Navigation: → Registration or Back
+________________
+
+
+Screen 3: Registration/Login
+Purpose: Account creation or authentication Elements:
+Registration Tab:
+         * Phone number input (+91 prefix)
+         * Name input
+         * Email (optional)
+         * "Send OTP" button
+         * Terms & Privacy checkbox
+         * "Switch to Login" link
+Login Tab:
+         * Phone number input
+         * "Send OTP" button
+         * "Need help?" link
+Data Captured: user.phone, user.name, user.email Navigation: → OTP Verification
+________________
+
+
+Screen 4: OTP Verification
+Purpose: Verify phone number Elements:
+         * "Enter 6-digit code sent to +91-XXXXX"
+         * 6 OTP input boxes (auto-focus)
+         * Resend timer: "Resend in 00:45"
+         * "Verify" button
+         * "Change number" link
+Data Validated: user.phone_verified = true Navigation: → Profile Setup
+________________
+
+
+Screen 5: Profile Setup
+Purpose: Collect essential pregnancy data Elements:
+Section 1: Basic Information
+         * Age input (dropdown: 18-50)
+         * Height input (cm/feet-inches toggle)
+         * Pre-pregnancy weight (kg/lbs)
+Section 2: Pregnancy Details
+         * "Is this your first pregnancy?" (Yes/No)
+         * If No: "How many previous pregnancies?" (number)
+         * "Any previous complications?" (multiselect checklist)
+         * Gestational Diabetes
+         * Pre-eclampsia
+         * Preterm Labor
+         * C-Section
+         * Miscarriage
+         * Other (text input)
+Section 3: Current Pregnancy
+         * "Last Menstrual Period (LMP)" date picker
+         * Auto-calculated: Current week + Expected Due Date (EDD)
+         * "Confirm these dates?" checkbox
+Section 4: Medical History
+         * "Do you have any of these conditions?" (multiselect)
+         * Diabetes
+         * Hypertension
+         * Thyroid disorder
+         * PCOS
+         * Heart condition
+         * Kidney disease
+         * Anemia
+         * Other (text input)
+Section 5: Lifestyle
+         * "Do you smoke?" (Yes/No)
+         * "Do you consume alcohol?" (Yes/No)
+Progress Indicator: Step 1 of 2 Navigation: → Doctor Assignment
+Data Captured: Complete user.profile and pregnancy.details objects
+________________
+
+
+Screen 6: Doctor Assignment
+Purpose: Link to primary healthcare provider Elements:
+Option A: Search Existing Doctor
+         * Search bar: "Doctor name or hospital"
+         * List of doctors in network (name, hospital, specialty)
+         * "Select" button on each card
+Option B: Add New Doctor
+         * Doctor name input
+         * Hospital/Clinic name input
+         * Phone number input
+         * Email (optional)
+         * "Add Doctor" button
+Option C: Skip for Now
+         * "I'll add this later" link
+Confirmation Toast: "Doctor added! They'll receive access to your data."
+Data Captured: pregnancy.doctor_id, care_team.primary_doctor Navigation: → Home Dashboard
+________________
+
+
+MAIN DASHBOARD (1 Screen)
+Screen 7: Home Dashboard
+Purpose: Central hub for all pregnancy information Layout: Scrollable single-page dashboard
+Header Section (Fixed):
+         * Greeting: "Good Morning, Priya 👋"
+         * Week indicator: "Week 24 | 16 weeks to go"
+         * Circular progress ring (gestational age)
+         * Risk badge: Green/Yellow/Orange/Red pill with score
+Quick Action Bar (Fixed):
+         * Emergency button (red, phone icon): "Call Doctor"
+         * Daily check-in status: "✓ Done" or "Tap to complete"
+         * "Upload Report" quick action
+         * "Today's Tasks" counter badge
+Content Sections (Scrollable):
+1. Risk Alert Card (Conditional - only if risk detected):
+         * Color-coded border (yellow/orange/red)
+         * Icon + Risk title: "⚠️ Pre-eclampsia Risk Detected"
+         * Risk percentage: "68% probability"
+         * AI insight: "Your BP trend shows concerning pattern"
+         * Primary CTA: "View Details" → Risk Details Screen
+         * Secondary: "Dismiss" (only for yellow)
+2. Daily Check-In Card:
+         * Status: "Completed ✓" or "Pending ⏰"
+         * Streak counter: "🔥 12 day streak!"
+         * Mini-graph of last 7 days compliance
+         * CTA: "Start Today's Check-In" → Daily Check-In Flow
+3. Next Appointment Card:
+         * Doctor photo + name
+         * Date & time: "Tomorrow, 10:00 AM"
+         * Type: "Routine Check-up" or "Ultrasound Scan"
+         * Location: Hospital name + "Get Directions" link
+         * Preparation checklist:
+         * ☐ Fasting required (if applicable)
+         * ☐ Bring previous reports
+         * ☐ Prepare questions
+         * CTAs: "Add to Calendar" | "Reschedule"
+4. Health Snapshot Card:
+         * Mini-cards in 2x2 grid:
+         * Blood Pressure: "120/80" (last reading date) + trend arrow
+         * Weight: "65 kg" (+2 kg this month) + mini graph
+         * Baby Movement: "12 kicks today" (last logged time)
+         * Hemoglobin: "11.2 g/dL" (↓ from last test) + color indicator
+         * CTA: "View All Health Data" → Health Timeline
+5. Baby Development Card:
+         * Illustration of baby at current week
+         * Size comparison: "Your baby is the size of a corn 🌽"
+         * Key developments this week (3 bullet points)
+         * CTA: "Read More" → Educational Content
+6. Today's Tasks Checklist:
+         * Auto-generated from care plan:
+         * ☐ Take iron tablet (9:00 AM)
+         * ☐ Log fetal movement
+         * ☐ Drink 8 glasses water
+         * ☐ 30-min walk
+         * Checkboxes to mark complete
+         * "Add Custom Task" button
+7. Recent Documents:
+         * Last 3 uploaded reports (thumbnail + title)
+         * Upload date
+         * CTA: "View All Documents" → Documents Screen
+8. Educational Content Widget:
+         * "This Week's Topic": "Managing Morning Sickness"
+         * Thumbnail image
+         * "5 min read" duration
+         * CTA: "Read Now" → Article View
+9. Care Team Quick Access:
+         * Horizontal scroll of care team members
+         * Profile photos: Doctor, Nutritionist, ASHA worker
+         * Online status indicator (green dot)
+         * Tap to message
+Data Displayed: Real-time aggregation from:
+         * daily_checkin table (latest)
+         * risk_scores table (current)
+         * appointments table (upcoming)
+         * health_metrics table (latest values)
+         * tasks table (today's pending)
+         * documents table (recent)
+Data Updates:
+         * Risk score: Every 24 hours (background job)
+         * Health metrics: On new data entry
+         * Tasks: Real-time checkbox updates
+         * Appointments: Calendar sync
+Navigation Options:
+         * Tap any card → Detailed view screen
+         * Bottom nav: Direct access to main sections
+         * Pull-to-refresh: Updates all data
+________________
+
+
+DAILY CHECK-IN FLOW (5 Screens)
+Screen 8: Check-In Intro
+Purpose: Prepare user for daily questions Elements:
+         * Header: "Daily Check-In for Week 24"
+         * Subtext: "Takes 2 minutes • 7 questions today"
+         * Progress: "Day 165 of 280 | 🔥 12 day streak"
+         * Illustration: Calm pregnant woman with checklist
+         * "Let's Begin" button
+         * "Skip Today" link (shows streak warning)
+Data Fetched:
+         * questionnaire.weekly_template (base questions)
+         * user.risk_profile (adaptive questions)
+         * Yesterday's answers (for follow-ups)
+Navigation: → Check-In Questions
+________________
+
+
+Screen 9: Check-In Questions (Dynamic)
+Purpose: Collect daily symptom and wellbeing data Layout: One question per screen with progress bar
+Question Types & UI:
+1. Scale Questions (Energy, Mood, Sleep Quality):
+         * Question text: "How is your energy level today?"
+         * Emoji scale: 😫 😟 😐 🙂 😄 (1-5)
+         * Tap to select (haptic feedback)
+         * Optional text: "Add details" (expandable)
+2. Yes/No Questions (Symptoms):
+         * Question: "Are you experiencing headaches?"
+         * Large buttons: "Yes" | "No"
+         * If Yes → Follow-up: "How severe?" (scale 1-10)
+         * If Yes → "Where?" (front/side/back of head icons)
+3. Numeric Input (Fetal Movement):
+         * Question: "How many times did baby kick today?"
+         * Number pad input (0-99)
+         * Helper text: "Count kicks in 2-hour window"
+         * "Not sure" option
+4. Multi-Select (Symptoms List):
+         * Question: "Any of these symptoms?"
+         * Checkbox list:
+         * ☐ Swelling in hands/feet
+         * ☐ Vision changes
+         * ☐ Severe abdominal pain
+         * ☐ Vaginal bleeding
+         * ☐ Reduced fetal movement
+         * ☐ Shortness of breath
+         * ☐ None of the above
+5. Photo Upload (Conditional):
+         * If swelling reported → "Take a photo of swelling"
+         * Camera button | Gallery button
+         * Skip option
+         * ML analysis: Severity detection
+6. Voice Input (Open-ended):
+         * Question: "Anything else you want to share?"
+         * Microphone button: "Tap to speak"
+         * Auto-transcription in selected language
+         * Text input alternative
+         * Character limit: 500
+Progress Indicator: "Question 3 of 7" Navigation:
+         * "Next" button (only active after answering)
+         * "Back" button
+         * "Save & Exit" (saves partial progress)
+Data Captured: Each answer → daily_checkin table
+{
+  "user_id": "uuid",
+  "date": "2026-01-13",
+  "week": 24,
+  "questions": [
+    {"q_id": "energy", "answer": 4, "type": "scale"},
+    {"q_id": "headache", "answer": true, "severity": 6, "location": "front"},
+    {"q_id": "fetal_kicks", "answer": 12},
+    {"q_id": "symptoms", "answer": ["swelling"], "photo_url": "s3://..."},
+    {"q_id": "notes", "answer": "Feeling tired in evenings", "voice_url": "s3://..."}
+  ],
+  "duration_seconds": 118
+}
+
+
+________________
+
+
+Screen 10: Check-In Analysis (Loading)
+Purpose: Show AI processing data Elements:
+         * Animated AI brain/heart icon
+         * Progress messages (rotating):
+         * "Analyzing your responses..."
+         * "Comparing with baseline..."
+         * "Checking for patterns..."
+         * "Generating insights..."
+         * Duration: 3-5 seconds (actual API call)
+Backend Process:
+         1. Save answers to database
+         2. Trigger ML model: analyze_daily_checkin(user_id, date)
+         3. Update risk score if needed
+         4. Generate personalized insights
+         5. Create task recommendations
+________________
+
+
+Screen 11: Check-In Results
+Purpose: Show insights and recommendations Layout: Card-based results
+Header:
+         * "✓ Check-In Complete!"
+         * Confetti animation (streak milestone)
+         * Points earned: "+10 points 🎯"
+Risk Status Card:
+         * Current risk level: Green/Yellow/Orange/Red badge
+         * "No concerns detected" or "Some attention needed"
+         * Change indicator: "↑ Risk increased slightly" (if applicable)
+AI Insights Card (Conditional):
+         * Purple background (AI branding)
+         * Icon: 🤖 or brain symbol
+         * Insight examples:
+         * "Your energy is lower than usual. Consider afternoon rest."
+         * "Fetal movement is within normal range. Great!"
+         * "Swelling detected in photo. We'll monitor this."
+         * "Learn Why" link → Explanation modal
+Recommendations Section:
+         * "Based on today's check-in:"
+         * Action cards:
+         1. ✅ "Elevate feet for 20 min" (added to today's tasks)
+         2. 💊 "Take extra iron tablet" (medication reminder set)
+         3. 📞 "Doctor will call you tomorrow" (if concerning pattern)
+Trend Comparison:
+         * "Compared to last week:"
+         * Mini-graphs:
+         * Energy: ↓ 15%
+         * Sleep: → Same
+         * Mood: ↑ 10%
+Streak Celebration (Conditional):
+         * If milestone (7, 14, 30, 60 days):
+         * Animation + badge unlock
+         * "🔥 30 Day Streak! You're amazing!"
+         * Social share option
+CTAs:
+         * "View Detailed Report" → Health Timeline
+         * "Back to Home"
+Data Stored:
+         * Update user.streak_count
+         * Update risk_scores.current_score
+         * Create insights entry
+         * Update tasks with recommendations
+________________
+
+
+Screen 12: Check-In Missed (Reminder)
+Purpose: Nudge completion without guilt Trigger: If check-in not done by 8 PM Elements:
+         * Push notification: "💙 Your daily check-in is waiting"
+         * In-app banner on Home:
+         * "Haven't checked in today"
+         * "Takes just 2 minutes"
+         * Streak counter: "Don't break your 12-day streak!"
+         * "Complete Now" button
+Personalization:
+         * Early pregnancy: Gentle reminders
+         * High-risk: More frequent, urgent tone
+         * Late pregnancy: Emphasize baby monitoring
+________________
+
+
+HEALTH TIMELINE (3 Screens)
+Screen 13: Timeline Overview
+Purpose: Visual journey of entire pregnancy Layout: Vertical scrollable timeline
+Header:
+         * Current week highlight: "You're here: Week 24"
+         * Progress bar: 0 to 40 weeks
+         * Filter chips: "All" | "Appointments" | "Tests" | "Milestones" | "Risks"
+Timeline Nodes (Chronological, past to future):
+Past Events (faded, completed checkmark):
+         * Week 4: "Pregnancy Confirmed ✓"
+         * Week 8: "First Ultrasound ✓" (thumbnail image)
+         * Week 12: "NT Scan ✓" (link to report)
+         * Week 16: "Triple Test ✓" (results: Normal)
+         * Week 20: "Anatomy Scan ✓" (gender revealed icon)
+Current Week (highlighted, pulsing):
+         * Week 24: "Glucose Screening Due"
+         * Status: Pending
+         * Schedule button
+         * Educational link: "Why this test?"
+Future Events (outlined, upcoming):
+         * Week 28: "Third Trimester Begins"
+         * Week 32: "Growth Scan"
+         * Week 36: "Weekly Check-ups Start"
+         * Week 38: "Group B Strep Test"
+         * Week 40: "Due Date! 👶"
+Risk Alert Nodes (Red/Orange markers):
+         * Week 22: "⚠️ Anemia Detected"
+         * Action taken: Iron supplements started
+         * Follow-up: Week 26 blood test
+         * Status: Improving
+Milestone Celebrations (Purple stars):
+         * Week 20: "🎉 Halfway There!"
+         * Week 13: "🌟 Entered Second Trimester"
+Data Visualization:
+         * Each node expandable (tap to see details)
+         * Color-coded: Green (normal) | Yellow (monitor) | Red (action taken)
+         * Icons: 💉 Vaccination | 🩺 Check-up | 📊 Test | ⚠️ Risk | 🎉 Milestone
+Interactive Elements:
+         * Tap node → Detail modal with:
+         * Event description
+         * Date & time (if past)
+         * Associated documents (if any)
+         * Doctor notes
+         * "Add to Calendar" (if future)
+         * "Share with Family" option
+Data Source:
+         * appointments table
+         * health_events table
+         * risk_alerts table
+         * milestones table (auto-generated based on week)
+Navigation:
+         * "Add Event" FAB (floating action button)
+         * "View Calendar" (switch to calendar view)
+________________
+
+
+Screen 14: Timeline Event Details
+Purpose: Deep dive into specific event Trigger: Tap any timeline node Modal Layout: Bottom sheet (75% screen)
+Header:
+         * Event icon + title
+         * Date & time
+         * Status badge (Completed/Pending/Cancelled)
+Content Sections:
+1. Overview:
+         * Event type: "Routine Ultrasound"
+         * Purpose: "Check baby growth and amniotic fluid"
+         * Duration: "30 minutes"
+2. Location (if appointment):
+         * Hospital/Clinic name
+         * Address
+         * Map thumbnail (tap to open navigation)
+         * "Get Directions" button
+3. Preparation (if upcoming):
+         * Checklist:
+         * ☐ Fasting required (8 hours)
+         * ☐ Drink water before scan
+         * ☐ Bring previous reports
+         * Downloadable PDF: "Pre-appointment Guide"
+4. Results (if completed):
+         * Report thumbnail/PDF viewer
+         * Key findings highlighted:
+         * "Baby weight: 600g (Normal)"
+         * "Placenta position: Anterior"
+         * "Amniotic fluid: Adequate"
+         * Doctor comments
+         * "Download Report" | "Share Report" buttons
+5. Follow-up Actions (if any):
+         * "Next scan scheduled: Week 28"
+         * "No concerns - continue routine care"
+6. Related Data:
+         * Link to ultrasound images gallery
+         * Link to doctor notes
+         * Link to measurements chart
+CTAs:
+         * "Edit Event" (if user-created)
+         * "Reschedule" (if appointment)
+         * "Mark as Complete"
+         * "Delete Event"
+         * "Close"
+Data Display: Single health_events record with related documents
+________________
+
+
+Screen 15: Add Timeline Event
+Purpose: User-added custom event Trigger: "Add Event" FAB from Timeline Form Layout:
+Step 1: Event Type:
+         * Icon grid selection:
+         * 🩺 Doctor Visit
+         * 💉 Vaccination
+         * 📊 Lab Test
+         * 💊 Medication Started
+         * ⚠️ Symptom/Concern
+         * 📝 Personal Note
+         * 🎉 Milestone
+Step 2: Details:
+         * Event title (text input)
+         * Date picker
+         * Time picker (optional)
+         * Description (text area, 500 char)
+         * Attach documents (optional)
+         * Camera | Gallery | Files
+         * Up to 5 attachments
+Step 3: Reminders (Optional):
+         * "Set reminder" toggle
+         * Time before event: 1 day / 1 hour / custom
+         * Notification method: Push / SMS / Both
+Step 4: Sharing:
+         * "Share with care team" toggle
+         * Select members: Doctor, Family, ASHA worker
+Submit:
+         * "Save Event" button
+         * Success toast: "Event added to timeline"
+         * Returns to timeline with new event inserted
+Data Created: New health_events entry
+{
+  "user_id": "uuid",
+  "type": "personal_note",
+  "title": "Felt baby's first kick!",
+  "date": "2026-01-13T14:30:00Z",
+  "description": "Was sitting at work when...",
+  "attachments": [],
+  "shared_with": ["husband"],
+  "reminder_set": false
+}
+
+
+________________
+
+
+DOCUMENTS HUB (6 Screens)
+Screen 16: Documents Dashboard
+Purpose: Centralized medical document repository Layout: Tabbed interface + list view
+Header:
+         * "Medical Documents" title
+         * Search bar: "Search by test name or date"
+         * Filter icon: Opens filter modal
+         * "Upload" FAB (floating action button)
+Tab Navigation:
+         1. All Documents (default)
+         2. Lab Reports
+         3. Ultrasounds
+         4. Prescriptions
+         5. Insurance
+Document List (All Documents Tab):
+         * Card per document:
+         * Thumbnail (PDF preview or document icon)
+         * Document title: "Hemoglobin Test"
+         * Date: "Jan 10, 2026"
+         * Category badge: "Lab Report"
+         * Status indicator:
+         * ✓ Processed (OCR complete)
+         * ⏳ Processing (OCR in progress)
+         * ⚠️ Review Needed (OCR uncertain)
+         * Trend arrow (if metrics extracted):
+         * Hemoglobin: 11.2 ↓ (from 11.8)
+         * 3-dot menu: View | Share | Delete
+Smart Sorting:
+         * Default: Most recent first
+         * Toggle: "Sort by importance" (AI-ranked by clinical relevance)
+Quick Stats Card (Top):
+         * "24 documents uploaded"
+         * "Last upload: 3 days ago"
+         * "All processed ✓"
+Empty State (if no documents):
+         * Illustration: Empty folder
+         * "No documents yet"
+         * "Upload your first report to get AI-powered insights"
+         * "Upload Now" button
+Data Source: documents table
+SELECT * FROM documents 
+WHERE user_id = ? 
+ORDER BY uploaded_at DESC
+
+
+Navigation:
+         * Tap card → Document Detail View
+         * Upload FAB → Upload Flow
+________________
+
+
+Screen 17: Upload Document Flow
+Purpose: Add new medical document Layout: Multi-step modal
+Step 1: Choose Upload Method:
+         * Large button options:
+         1. 📷 Take Photo (Camera)
+         * "Best for handwritten reports"
+         2. 🖼️ From Gallery (Photo library)
+         * "Select existing images"
+         3. 📄 From Files (File picker)
+         * "PDFs, images, Word docs"
+         4. 📲 WhatsApp Import (Integration)
+         * "Import from doctor's message"
+Step 2: Image Capture/Selection:
+         * If Camera chosen:
+
+            * Full-screen camera view
+            * Grid overlay (for alignment)
+            * Flash toggle
+            * "Use Photo" | "Retake" buttons
+            * Multi-page support: "Add another page"
+            * If Gallery chosen:
+
+               * Photo grid
+               * Multi-select checkbox (up to 10)
+               * "Upload Selected" button
+Step 3: Document Type:
+               * "What type of document is this?"
+               * Dropdown/Grid selection:
+               * Blood Test
+               * Urine Test
+               * Ultrasound Report
+               * Prescription
+               * Discharge Summary
+               * Insurance Document
+               * Other (text input)
+Step 4: Auto-Detection Preview (If Lab Report):
+               * "We detected these values:"
+               * Table of extracted data:
+Metric
+	Value
+	Normal Range
+	Hemoglobin
+	11.2 g/dL
+	12-15 g/dL
+	Platelets
+	180,000
+	150,000-450,000
+	               * Editable fields (pencil icon)
+               * "This looks wrong" button → Manual entry
+Step 5: Manual Entry (Conditional):
+               * If OCR confidence < 70% or user chooses manual:
+               * Form with common metrics:
+               * Test name dropdown
+               * Value input
+               * Unit dropdown
+               * Date of test
+               * "Add Another Metric" button
+Step 6: Metadata:
+               * Document title (auto-filled, editable)
+               * Date of document (date picker)
+               * Doctor/Lab name (text input, autocomplete from history)
+               * Notes (optional, 500 char)
+Step 7: Review & Upload:
+               * Preview of document
+               * Extracted data summary
+               * "Upload" button with progress bar
+               * "Cancel" option
+Upload Progress:
+               * Loading animation
+               * Status text:
+               * "Uploading... 45%"
+               * "Processing with AI..."
+               * "Extracting data..."
+               * Average time: 10-30 seconds
+Success Screen:
+               * ✓ Checkmark animation
+               * "Document uploaded successfully!"
+               * Insights card:
+               * "Your hemoglobin dropped 5% since last test"
+               * "We'll monitor this trend"
+               * CTAs:
+               * "View Document"
+               * "Upload Another"
+               * "Done"
+Data Created:
+               * documents table entry
+               * health_metrics table entries (extracted values)
+               * ocr_results table (for audit)
+               * Update risk_scores (if relevant)
+Error Handling:
+               * Poor image quality: "Image unclear - retake?"
+               * Unsupported format: "Please upload PDF, JPG, or PNG"
+               * Upload failed: "Connection error - retry?"
+________________
+
+
+Screen 18: Document Detail View
+Purpose: View single document with AI insights Layout: Full-screen modal
+Header:
+               * Back button
+               * Document title
+               * Share icon
+               * 3-dot menu: Download | Print | Delete
+Document Viewer:
+               * PDF renderer or image viewer
+               * Zoom/pan enabled
+               * Page navigation (if multi-page)
+AI Insights Panel (Collapsible):
+               * "AI Extracted Data" section:
+
+                  * Table of metrics with color-coded status
+                  * Comparison with previous values
+                  * Trend graphs (mini-charts)
+                  * "Clinical Interpretation" (if available):
+
+                     * Plain language explanation
+                     * "Your hemoglobin is slightly low. This is common in pregnancy."
+                     * "Action needed: Continue iron supplements"
+                     * "Questions for Doctor":
+
+                        * Auto-generated questions based on results
+                        * "Why is my platelet count lower?"
+                        * "Do I need another test?"
+                        * Copy button for each question
+Metadata Section:
+                        * Date of document
+                        * Uploaded on
+                        * Document type
+                        * Lab/Hospital name
+                        * Associated appointment (if linked)
+Related Documents:
+                        * "Previous Hemoglobin Tests" (horizontal scroll)
+                        * Quick comparison view
+Actions Bar (Bottom):
+                        * "Share with Doctor" button
+                        * "Add to Appointment" dropdown
+                        * "Mark as Reviewed"
+Data Display: Single document with AI analysis
+{
+  "document_id": "uuid",
+  "title": "Blood Test Report",
+  "file_url": "s3://...",
+  "ocr_data": {
+    "hemoglobin": {"value": 11.2, "unit": "g/dL", "confidence": 0.95},
+    "platelets": {"value": 180000, "unit": "/μL", "confidence": 0.88}
+  },
+  "ai_insights": {
+    "summary": "Mild anemia detected",
+    "comparison": "5% decrease from last test",
+    "recommendation": "Continue iron supplements"
+  }
+}
+
+
+________________
+
+
+Screen 19: Document Filter Modal
+Purpose: Advanced search and filtering Trigger: Filter icon on Documents Dashboard Layout: Bottom sheet
+Filter Options:
+1. Date Range:
+                        * Presets: Last 7 days | Last 30 days | This trimester | Custom
+                        * Custom: Date picker (from - to)
+2. Document Type (Multiselect checkboxes):
+                        * ☐ Blood Tests
