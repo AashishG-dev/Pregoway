@@ -52,55 +52,77 @@ const questions = [
 export default function CheckInPage() {
   const router = useRouter();
   const { user: authUser } = useAuth();
-  const [step, setStep] = useState(0); // 0 = Intro, 1...N = Questions, N+1 = Success
+
+  // State
+  const [questionQueue, setQuestionQueue] = useState<any[]>(questions);
+  const [step, setStep] = useState(0); // 0 = Intro, 1 = Q1, etc.
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
 
-  const currentQuestion = questions[step - 1];
-  const progress = step > 0 ? ((step - 1) / questions.length) * 100 : 0;
+  // Derived
+  const currentQuestion = step > 0 ? questionQueue[step - 1] : null;
+  const progress = step > 0 ? ((step - 1) / questionQueue.length) * 100 : 0;
 
   const handleAnswer = (val: any) => {
+    if (!currentQuestion) return;
     setAnswers({ ...answers, [currentQuestion.id]: val });
   };
 
   const handleNext = async () => {
-    if (step < questions.length) {
+    // 1. Check Follow Up Logic
+    if (currentQuestion && currentQuestion.followUp) {
+      const userAns = answers[currentQuestion.id];
+      if (currentQuestion.followUp.ifYes && userAns === true) {
+        const nextQ = currentQuestion.followUp.ifYes;
+        // Insert next question if not already there
+        if (questionQueue[step]?.id !== nextQ.id) {
+          const newQueue = [...questionQueue];
+          newQueue.splice(step, 0, nextQ);
+          setQuestionQueue(newQueue);
+          // Note: queue length increases, but step stays same index-wise relative to queue start
+        }
+      }
+    }
+
+    // 2. Advance / Submit
+    if (step < questionQueue.length) {
       setStep(step + 1);
     } else {
-      if (!authUser) return;
-      setLoading(true);
-      try {
-        // 1. Submit Symptom Log
-        const { error: checkinError } = await supabase.from('daily_checkins').insert({
-          user_id: authUser.id,
-          data: answers,
-          date: new Date().toISOString().split('T')[0]
-        });
+      await submitData();
+    }
+  };
 
-        if (checkinError) throw checkinError;
+  const submitData = async () => {
+    if (!authUser) return;
+    setLoading(true);
+    try {
+      // 1. Daily Checkin
+      const { error: checkinError } = await supabase.from('daily_checkins').insert({
+        user_id: authUser.id,
+        data: answers,
+        date: new Date().toISOString().split('T')[0]
+      });
+      if (checkinError) throw checkinError;
 
-        // 2. Submit Vital Metric (Kicks)
-        if (answers.kicks) {
-          await supabase.from('health_metrics').insert({
-            user_id: authUser.id,
-            type: 'KICKS',
-            value: Number(answers.kicks),
-            unit: 'kicks',
-            created_at: new Date().toISOString()
-          });
-        }
+      // 2. Metrics (Kicks)
+      const metricsToSave = [];
+      if (answers.kicks) metricsToSave.push({ user_id: authUser.id, type: 'KICKS', value: String(answers.kicks), unit: 'kicks' });
 
-        // 3. Trigger Risk Analysis
-        await calculateAndLogRisk(authUser.id, answers);
-
-        setStep(questions.length + 1); // Success
-        setTimeout(() => router.push('/dashboard'), 2000);
-      } catch (err) {
-        console.error(err);
-        alert("Failed to submit check-in");
-      } finally {
-        setLoading(false);
+      if (metricsToSave.length > 0) {
+        await supabase.from('health_metrics').insert(metricsToSave);
       }
+
+      // 3. Risk Analysis
+      await calculateAndLogRisk(authUser.id, answers);
+
+      setStep(step + 1); // Move to success logic (step > queue length)
+      setTimeout(() => router.push('/dashboard'), 2000);
+
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong saving your data.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -114,15 +136,15 @@ export default function CheckInPage() {
         .eq('user_id', authUser.id)
         .eq('date', today)
         .single();
-      
+
       if (data) {
-        setStep(questions.length + 1); // Skip to success if already done
+        setStep(100); // Already done today
       }
     }
     checkDailyStatus();
   }, [authUser]);
 
-  // Intro Screen
+  // RENDER: Intro
   if (step === 0) {
     return (
       <div className="flex flex-col min-h-screen bg-white p-6 relative">
@@ -135,18 +157,16 @@ export default function CheckInPage() {
           <p className="text-gray-500 mb-8 max-w-xs">
             Take 2 minutes to track your health. Maintaining your streak helps our AI predict risks early.
           </p>
-
           <div className="bg-orange-50 text-orange-700 px-4 py-2 rounded-full font-bold text-sm mb-8 flex items-center gap-2">
-            <span>🔥</span> 12 Day Streak!
+            <span>🔥</span> Your Streak Starts Today!
           </div>
-
           <button
             onClick={() => setStep(1)}
             className="w-full max-w-sm bg-brand-600 hover:bg-brand-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg active:scale-95 transition-all"
           >
             Let's Begin
           </button>
-          <button 
+          <button
             onClick={() => router.push('/dashboard')}
             className="mt-4 text-gray-400 text-sm font-medium hover:text-gray-600 transition-colors"
           >
@@ -157,8 +177,9 @@ export default function CheckInPage() {
     );
   }
 
-  // Success Screen
-  if (step > questions.length) {
+  // RENDER: Success
+  // Success if step exceeds queue length OR we are in 'completed' state (100)
+  if (step > questionQueue.length || step >= 100) {
     return (
       <div className="flex flex-col min-h-screen bg-green-50 p-6 items-center justify-center">
         <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6 text-green-600">
@@ -166,9 +187,9 @@ export default function CheckInPage() {
         </div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2">All Done for Today!</h2>
         <p className="text-gray-500 text-center mb-8">Your health data has been updated. Come back tomorrow!</p>
-        <button 
-           onClick={() => router.push('/dashboard')}
-           className="px-6 py-3 bg-white text-gray-900 font-semibold rounded-xl shadow-sm border border-gray-200"
+        <button
+          onClick={() => router.push('/dashboard')}
+          className="px-6 py-3 bg-white text-gray-900 font-semibold rounded-xl shadow-sm border border-gray-200"
         >
           Return to Dashboard
         </button>
@@ -176,7 +197,7 @@ export default function CheckInPage() {
     )
   }
 
-  // Question Screen
+  // RENDER: Question
   return (
     <div className="flex flex-col min-h-screen bg-white p-6 pb-24">
       {/* Header */}
@@ -185,9 +206,9 @@ export default function CheckInPage() {
           <ChevronLeft className="w-6 h-6" />
         </button>
         <span className="text-sm font-medium text-gray-500">
-          Question {step} of {questions.length}
+          Question {step} of {questionQueue.length}
         </span>
-        <div className="w-6"></div> {/* Spacer */}
+        <div className="w-6"></div>
       </div>
 
       {/* Progress Bar */}
@@ -200,15 +221,14 @@ export default function CheckInPage() {
 
       <div className="flex-1">
         <h2 className="text-2xl font-bold text-gray-900 mb-8 leading-tight">
-          {currentQuestion.text}
+          {currentQuestion?.text}
         </h2>
 
         {/* Dynamic Inputs */}
         <div className="space-y-4">
-
-          {currentQuestion.type === 'scale' && (
+          {currentQuestion?.type === 'scale' && (
             <div className="flex justify-between items-center text-4xl">
-              {currentQuestion.options?.map((emoji, idx) => (
+              {currentQuestion.options?.map((emoji: string, idx: number) => (
                 <button
                   key={idx}
                   onClick={() => handleAnswer(idx + 1)}
@@ -223,7 +243,7 @@ export default function CheckInPage() {
             </div>
           )}
 
-          {currentQuestion.type === 'yes_no' && (
+          {currentQuestion?.type === 'yes_no' && (
             <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={() => handleAnswer(true)}
@@ -240,12 +260,31 @@ export default function CheckInPage() {
             </div>
           )}
 
-          {currentQuestion.type === 'numeric' && (
+          {currentQuestion?.type === 'scale_10' && (
+            <div className="grid grid-cols-5 gap-2">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                <button
+                  key={num}
+                  onClick={() => handleAnswer(num)}
+                  className={cn(
+                    "aspect-square rounded-xl font-bold text-lg border-2 transition-all",
+                    answers[currentQuestion.id] === num
+                      ? "border-brand-500 bg-brand-50 text-brand-700"
+                      : "border-gray-100 text-gray-600 hover:border-gray-300"
+                  )}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {currentQuestion?.type === 'numeric' && (
             <div className="flex flex-col items-center">
               <input
-                type="number"
-                placeholder="0"
-                className="w-32 text-center text-5xl font-bold border-b-2 border-gray-200 focus:border-brand-500 outline-none py-4 bg-transparent"
+                type="text"
+                placeholder="Type here..."
+                className="w-48 text-center text-5xl font-bold border-b-2 border-gray-200 focus:border-brand-500 outline-none py-4 bg-transparent"
                 onChange={(e) => handleAnswer(e.target.value)}
                 value={answers[currentQuestion.id] || ''}
               />
@@ -253,9 +292,9 @@ export default function CheckInPage() {
             </div>
           )}
 
-          {currentQuestion.type === 'multi' && (
+          {currentQuestion?.type === 'multi' && (
             <div className="space-y-3">
-              {currentQuestion.options?.map((opt) => (
+              {currentQuestion.options?.map((opt: string) => (
                 <button
                   key={opt}
                   onClick={() => {
@@ -287,10 +326,10 @@ export default function CheckInPage() {
         </button>
         <button
           onClick={handleNext}
-          disabled={answers[currentQuestion.id] === undefined && currentQuestion.type !== 'multi'}
+          disabled={answers[currentQuestion?.id] === undefined && currentQuestion?.type !== 'multi'}
           className="flex-1 bg-brand-900 disabled:bg-gray-200 disabled:text-gray-400 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-black transition-colors"
         >
-          Next <ChevronRight className="w-5 h-5" />
+          {loading ? "Saving..." : "Next"} <ChevronRight className="w-5 h-5" />
         </button>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import AIChatBot from "@/components/AIChatBot";
 
 export default function DashboardLayout({
   children,
@@ -54,13 +55,15 @@ export default function DashboardLayout({
       </main>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-3 flex justify-between items-center z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-3 flex justify-between items-center z-50">
         <NavLink href="/dashboard" icon={<Home className="w-6 h-6" />} label="Home" active={pathname === '/dashboard'} />
         <NavLink href="/dashboard/checkin" icon={<ClipboardCheck className="w-6 h-6" />} label="Check-In" active={pathname.startsWith('/dashboard/checkin')} />
         <NavLink href="/dashboard/timeline" icon={<Calendar className="w-6 h-6" />} label="Timeline" active={pathname.startsWith('/dashboard/timeline')} />
         <NavLink href="/dashboard/vault" icon={<FileText className="w-6 h-6" />} label="Docs" active={pathname.startsWith('/dashboard/vault')} />
         <NavLink href="/dashboard/more" icon={<User className="w-6 h-6" />} label="More" active={pathname.startsWith('/dashboard/more')} />
       </div>
+
+      <AIChatBot />
     </div>
   );
 }

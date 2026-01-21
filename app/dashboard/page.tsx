@@ -7,25 +7,33 @@ import {
   AlertTriangle,
   ChevronRight,
   MoreHorizontal,
-  LogOut
+  LogOut,
+  Plus
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthContext";
+import HealthTrends from "@/components/HealthTrends";
+import LogVitalsModal from "@/components/LogVitalsModal";
 
 export default function DashboardPage() {
-  const { user: authUser, signOut } = useAuth();
+  const { user: authUser, loading: authLoading, signOut } = useAuth();
+  const router = useRouter();
   const [user, setUser] = useState({ name: "Loading...", week: 0, daysToGo: 0 });
   const [risk, setRisk] = useState({ score: 0, level: 'green', label: 'Low Risk', trend: 'stable' });
   const [checkinStreak, setCheckinStreak] = useState(0);
   const [metrics, setMetrics] = useState<Record<string, any>>({});
   const [appointment, setAppointment] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'cards' | 'charts'>('cards');
+  const [showLogModal, setShowLogModal] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
-      if (!authUser) return;
+      if (authLoading || !authUser) return; // Wait for auth to be ready
 
       // 1. Fetch Profile
       const { data: profile } = await supabase
@@ -129,7 +137,7 @@ export default function DashboardPage() {
     }
 
     fetchData();
-  }, [authUser]);
+  }, [authUser, authLoading, refreshKey]);
 
   const getWeekStage = (week: number) => {
     if (week <= 4) return "Conception stage";
@@ -138,6 +146,10 @@ export default function DashboardPage() {
     if (week <= 24) return "Second Trimester";
     return "Third Trimester";
   };
+
+  // Progress Circle Calculation
+  const circumference = 2 * Math.PI * 40; // r=40
+  const progressOffset = circumference - ((user.week / 40) * circumference);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -154,7 +166,10 @@ export default function DashboardPage() {
               <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
             </button>
             <button
-              onClick={() => signOut()}
+              onClick={async () => {
+                await signOut();
+                router.push('/auth/login');
+              }}
               className="p-2 bg-gray-50 rounded-full text-gray-400 hover:text-red-500 transition-colors"
               title="Sign Out"
             >
@@ -176,7 +191,13 @@ export default function DashboardPage() {
           <div className="relative w-24 h-24 flex items-center justify-center">
             <svg className="w-full h-full transform -rotate-90">
               <circle cx="48" cy="48" r="40" stroke="#f3e8ff" strokeWidth="8" fill="none" />
-              <circle cx="48" cy="48" r="40" stroke="#db2777" strokeWidth="8" fill="none" strokeDasharray="251.2" strokeDashoffset="100" strokeLinecap="round" />
+              <circle
+                cx="48" cy="48" r="40"
+                stroke="#db2777" strokeWidth="8" fill="none"
+                strokeDasharray={circumference}
+                strokeDashoffset={progressOffset}
+                strokeLinecap="round"
+              />
             </svg>
             <div className="absolute flex flex-col items-center">
               <span className="text-xs text-gray-400">Days to go</span>
@@ -234,44 +255,60 @@ export default function DashboardPage() {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-gray-900 text-lg">Health Snapshot</h3>
-            <button className="text-brand-600 text-sm font-medium hover:underline">See All</button>
+            <div className="flex bg-gray-100 p-1 rounded-lg">
+              <button onClick={() => setViewMode('cards')} className={cn("px-3 py-1 text-xs font-medium rounded-md transition-all", viewMode === 'cards' ? "bg-white shadow-sm text-gray-900" : "text-gray-500")}>Cards</button>
+              <button onClick={() => setViewMode('charts')} className={cn("px-3 py-1 text-xs font-medium rounded-md transition-all", viewMode === 'charts' ? "bg-white shadow-sm text-gray-900" : "text-gray-500")}>Trends</button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <HealthCard
-              label="Blood Pressure"
-              value={metrics['BP']?.value || '--'}
-              unit="mmHg"
-              trend="stable"
-              date={metrics['BP'] ? new Date(metrics['BP'].created_at).toLocaleDateString() : 'N/A'}
-              icon={<Activity className="w-5 h-5 text-blue-500" />}
-            />
-            <HealthCard
-              label="Weight"
-              value={metrics['WEIGHT']?.value || '--'}
-              unit="kg"
-              trend="up"
-              date={metrics['WEIGHT'] ? new Date(metrics['WEIGHT'].created_at).toLocaleDateString() : 'N/A'}
-              icon={<Activity className="w-5 h-5 text-purple-500" />}
-            />
-            <HealthCard
-              label="Hemoglobin"
-              value={metrics['HB']?.value || '--'}
-              unit="g/dL"
-              trend="down"
-              isWarning={metrics['HB']?.value < 11}
-              date={metrics['HB'] ? new Date(metrics['HB'].created_at).toLocaleDateString() : 'N/A'}
-              icon={<Activity className="w-5 h-5 text-red-500" />}
-            />
-            <HealthCard
-              label="Baby Kicks"
-              value={metrics['KICKS']?.value || '--'}
-              unit="kicks"
-              trend="stable"
-              date={metrics['KICKS'] ? new Date(metrics['KICKS'].created_at).toLocaleDateString() : 'N/A'}
-              icon={<Activity className="w-5 h-5 text-green-500" />}
-            />
-          </div>
+          {viewMode === 'cards' ? (
+            <div className="grid grid-cols-2 gap-4">
+              <HealthCard
+                label="Blood Pressure"
+                value={metrics['BP']?.value || '--'}
+                unit="mmHg"
+                trend="stable"
+                date={metrics['BP'] ? new Date(metrics['BP'].created_at).toLocaleDateString() : 'N/A'}
+                icon={<Activity className="w-5 h-5 text-blue-500" />}
+              />
+              <HealthCard
+                label="Weight"
+                value={metrics['WEIGHT']?.value || '--'}
+                unit="kg"
+                trend="up"
+                date={metrics['WEIGHT'] ? new Date(metrics['WEIGHT'].created_at).toLocaleDateString() : 'N/A'}
+                icon={<Activity className="w-5 h-5 text-purple-500" />}
+              />
+              <HealthCard
+                label="Hemoglobin"
+                value={metrics['HB']?.value || '--'}
+                unit="g/dL"
+                trend="down"
+                isWarning={metrics['HB']?.value < 11}
+                date={metrics['HB'] ? new Date(metrics['HB'].created_at).toLocaleDateString() : 'N/A'}
+                icon={<Activity className="w-5 h-5 text-red-500" />}
+              />
+              <HealthCard
+                label="Baby Kicks"
+                value={metrics['KICKS']?.value || '--'}
+                unit="kicks"
+                trend="stable"
+                date={metrics['KICKS'] ? new Date(metrics['KICKS'].created_at).toLocaleDateString() : 'N/A'}
+                icon={<Activity className="w-5 h-5 text-green-500" />}
+              />
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                <h4 className="font-bold text-gray-700 mb-4">Weight Trend</h4>
+                <HealthTrends userId={authUser?.id || ''} type="WEIGHT" />
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                <h4 className="font-bold text-gray-700 mb-4">Systolic BP Trend</h4>
+                <HealthTrends userId={authUser?.id || ''} type="BP" />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Upcoming Appointment */}
@@ -298,6 +335,7 @@ export default function DashboardPage() {
           </div>
         )}
 
+
         {!appointment && (
           <div className="bg-gray-50 rounded-2xl p-5 border border-dashed border-gray-200 text-center">
             <p className="text-gray-500 text-sm">No upcoming appointments scheduled.</p>
@@ -306,6 +344,13 @@ export default function DashboardPage() {
         )}
 
       </div>
+
+      <LogVitalsModal
+        isOpen={showLogModal}
+        onClose={() => setShowLogModal(false)}
+        userId={authUser?.id || ''}
+        onSuccess={() => setRefreshKey(k => k + 1)}
+      />
     </div>
   );
 }
