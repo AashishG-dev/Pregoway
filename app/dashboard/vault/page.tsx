@@ -1,16 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { FileText, Upload, Search, Filter, Eye, Download, Loader2, Trash2 } from "lucide-react";
+import { FileText, Upload, Search, Eye, Loader2, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthContext";
-import { cn } from "@/lib/utils";
 
 type Doc = {
    id: string;
    title: string;
    type: string;
-   created_at: string;
+   uploaded_at: string;
    status: string;
    file_url: string;
 };
@@ -24,17 +23,27 @@ export default function VaultPage() {
    const [uploading, setUploading] = useState(false);
 
    async function loadDocs() {
-      if (!user) return;
+      if (!user) {
+         setLoading(false);
+         return;
+      }
+
       try {
          const { data, error } = await supabase
             .from('documents')
             .select('*')
             .eq('user_id', user.id)
-            .order('created_at', { ascending: false });
+            .order('uploaded_at', { ascending: false });
 
-         if (data) setDocs(data);
+         if (error) {
+            console.error("Load Error Details:", error);
+         }
+
+         if (data) {
+            setDocs(data);
+         }
       } catch (err) {
-         console.error("Error fetching docs:", err);
+         console.error("Critical Load Error:", err);
       } finally {
          setLoading(false);
       }
@@ -63,26 +72,29 @@ export default function VaultPage() {
             .from('vault')
             .upload(fileName, file);
 
-         if (storageError) throw storageError;
+         if (storageError) {
+            alert(`Storage Upload Failed: ${storageError.message}`);
+            throw storageError;
+         }
 
          // 2. Insert Metadata
          const { error: dbError } = await supabase.from('documents').insert({
             user_id: user.id,
             title: file.name,
-            type: 'Lab', // Default for now
             file_url: storageData.path,
-            status: 'Analyzed',
-            risk_status: 'Normal'
+            status: 'Analyzed'
          });
 
-         if (dbError) throw dbError;
+         if (dbError) {
+            alert(`Database Save Failed: ${dbError.message}`);
+            throw dbError;
+         }
 
          // 3. Refresh
          await loadDocs();
 
-      } catch (err) {
-         console.error("Upload failed", err);
-         alert("Failed to upload document. Please ensure your network is connected and try again.");
+      } catch (err: any) {
+         console.error("Upload process failed:", err);
       } finally {
          setUploading(false);
          if (fileInputRef.current) fileInputRef.current.value = "";
@@ -90,8 +102,7 @@ export default function VaultPage() {
    };
 
    const handleView = async (path: string) => {
-      // Get signed URL
-      const { data } = await supabase.storage.from('vault').createSignedUrl(path, 60);
+      const { data, error } = await supabase.storage.from('vault').createSignedUrl(path, 60);
       if (data?.signedUrl) {
          window.open(data.signedUrl, '_blank');
       }
@@ -124,9 +135,7 @@ export default function VaultPage() {
          <div className="bg-white p-6 pb-4 sticky top-0 z-10 shadow-sm">
             <div className="flex justify-between items-center mb-4">
                <h1 className="text-2xl font-bold text-gray-900">Health Records</h1>
-               <button className="p-2 bg-gray-100 rounded-full">
-                  <Search className="w-5 h-5 text-gray-500" />
-               </button>
+               {docs.length > 0 && <span className="text-xs bg-gray-100 px-2 py-1 rounded">{docs.length} items</span>}
             </div>
 
             <button
@@ -149,7 +158,6 @@ export default function VaultPage() {
          </div>
 
          <div className="p-4 space-y-4">
-            {/* Categories */}
             <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
                {['All', 'Lab Reports', 'Prescriptions', 'Scans'].map((cat, i) => (
                   <button key={cat} className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium ${i === 0 ? 'bg-gray-900 text-white' : 'bg-white border border-gray-200 text-gray-600'}`}>
@@ -158,7 +166,6 @@ export default function VaultPage() {
                ))}
             </div>
 
-            {/* Doc List */}
             <div className="space-y-3">
                {docs.length === 0 ? (
                   <div className="text-center py-10 text-gray-400">
@@ -174,7 +181,7 @@ export default function VaultPage() {
                         <div className="flex-1 min-w-0">
                            <h4 className="font-bold text-gray-900 truncate">{doc.title}</h4>
                            <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
-                              <span>{new Date(doc.created_at).toLocaleDateString()}</span>
+                              <span>{doc.uploaded_at ? new Date(doc.uploaded_at).toLocaleDateString() : 'N/A'}</span>
                               <span>•</span>
                               <span className="text-green-600 font-medium">{doc.status || 'Analyzed'}</span>
                            </div>
