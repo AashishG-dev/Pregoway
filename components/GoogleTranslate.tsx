@@ -91,7 +91,8 @@ export default function GoogleTranslate() {
                 document.body.appendChild(source);
                 source.style.position = 'fixed';
                 source.style.bottom = '20px';
-                source.style.right = '20px';
+                source.style.left = '20px'; // Moved to bottom-left to verify UI clearance
+                source.style.right = 'auto';
                 source.style.zIndex = '9999';
                 source.style.display = 'inline-flex';
             }

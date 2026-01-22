@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { Users, AlertTriangle, MessageSquare, Activity, Calendar, Search, Filter, CheckCircle, XCircle } from "lucide-react";
+import { Users, AlertTriangle, MessageSquare, Activity, Calendar, Search, Filter, CheckCircle, XCircle, Video, ArrowRight } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
@@ -146,41 +148,41 @@ export default function DoctorDashboard() {
                         icon={<Users className="w-6 h-6 text-blue-600" />}
                         label="Active Patients"
                         value={stats.activePatients}
-                        color="bg-blue-50 border-blue-100"
+                        color="bg-white border-blue-100 shadow-sm hover:shadow-md transition-shadow"
                     />
                     <StatCard 
                         icon={<AlertTriangle className="w-6 h-6 text-red-600" />}
                         label="Critical Alerts"
                         value={stats.criticalAlerts}
-                        color="bg-red-50 border-red-100"
+                        color="bg-white border-red-100 shadow-sm hover:shadow-md transition-shadow"
                         highlight={stats.criticalAlerts > 0}
                     />
                     <StatCard 
                         icon={<MessageSquare className="w-6 h-6 text-purple-600" />}
                         label="Pending Requests"
                         value={stats.pendingRequests}
-                        color="bg-purple-50 border-purple-100"
+                        color="bg-white border-purple-100 shadow-sm hover:shadow-md transition-shadow"
                     />
                     <StatCard 
                         icon={<Calendar className="w-6 h-6 text-emerald-600" />}
-                        label="Appointments"
+                        label="Today's Appointments"
                         value={stats.todaysAppointments}
-                        color="bg-emerald-50 border-emerald-100"
+                        color="bg-white border-emerald-100 shadow-sm hover:shadow-md transition-shadow"
                     />
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid lg:grid-cols-3 gap-8">
                     {/* Left Column: Patients & Requests */}
-                    <div className="md:col-span-2 space-y-8">
+                    <div className="lg:col-span-2 space-y-8">
                         
                          {/* Pending Requests Section */}
                          {requests.length > 0 && (
                             <div className="bg-white rounded-2xl border border-purple-100 shadow-sm overflow-hidden mb-8">
-                                <div className="p-4 bg-purple-50 border-b border-purple-100 flex justify-between items-center">
+                                <div className="p-4 bg-gradient-to-r from-purple-50 to-white border-b border-purple-100 flex justify-between items-center">
                                     <h2 className="font-bold text-purple-900 flex items-center gap-2">
                                         <Users className="w-4 h-4" /> New Patient Requests
                                     </h2>
-                                    <span className="px-2 py-0.5 bg-white rounded text-xs font-bold text-purple-600">{requests.length} new</span>
+                                    <span className="px-2 py-0.5 bg-white rounded text-xs font-bold text-purple-600 border border-purple-200 shadow-sm">{requests.length} new</span>
                                 </div>
                                 <div className="divide-y divide-purple-50">
                                     {requests.map(req => (
@@ -265,11 +267,46 @@ export default function DoctorDashboard() {
                         </div>
                     </div>
 
-                    {/* Right Column: Analytics */}
+                    {/* Right Column: Analytics & Schedule */}
                     <div className="space-y-6">
+                         {/* Upcoming Appointments (New Feature) */}
+                         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                            <h3 className="font-bold text-slate-900 mb-4 flex items-center justify-between">
+                                <span>Upcoming Schedule</span>
+                                <span className="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-1 rounded-full">Today</span>
+                            </h3>
+                            <div className="space-y-4">
+                                {[
+                                    { time: "10:00 AM", name: "Anjali Sharma", type: "Regular Checkup", status: "completed" },
+                                    { time: "02:30 PM", name: "Priya Singh", type: "Urgent Consultation", status: "upcoming" }
+                                ].map((apt, i) => (
+                                    <div key={i} className="flex items-start gap-3 pb-3 border-b border-slate-50 last:border-0 last:pb-0">
+                                        <div className="flex flex-col items-center">
+                                            <span className="text-xs font-bold text-slate-500">{apt.time.split(' ')[0]}</span>
+                                            <span className="text-[10px] text-slate-400">{apt.time.split(' ')[1]}</span>
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="font-bold text-slate-800 text-sm">{apt.name}</div>
+                                            <div className="text-xs text-slate-500">{apt.type}</div>
+                                        </div>
+                                        {apt.status === 'upcoming' ? (
+                                            <button className="p-1.5 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 transition-colors" title="Join Call">
+                                                <Video className="w-4 h-4" />
+                                            </button>
+                                        ) : (
+                                            <CheckCircle className="w-4 h-4 text-slate-300" />
+                                        )}
+                                    </div>
+                                ))}
+                                <button className="w-full py-2 text-xs font-bold text-slate-500 flex items-center justify-center gap-1 hover:text-slate-800 transition-colors">
+                                    View Full Calendar <ArrowRight className="w-3 h-3" />
+                                </button>
+                            </div>
+                         </div>
+
                         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                             <h3 className="font-bold text-slate-900 mb-4">Patient Risk Distribution</h3>
-                            <div className="h-64 w-full">
+                            <div className="h-48 w-full">
                                 {patients.length > 0 ? (
                                     <ResponsiveContainer width="100%" height="100%">
                                         <PieChart>
@@ -277,8 +314,8 @@ export default function DoctorDashboard() {
                                                 data={riskData}
                                                 cx="50%"
                                                 cy="50%"
-                                                innerRadius={60}
-                                                outerRadius={80}
+                                                innerRadius={40}
+                                                outerRadius={60}
                                                 paddingAngle={5}
                                                 dataKey="value"
                                             >
@@ -287,7 +324,7 @@ export default function DoctorDashboard() {
                                                 ))}
                                             </Pie>
                                             <RechartsTooltip />
-                                            <Legend verticalAlign="bottom" height={36}/>
+                                            <Legend verticalAlign="bottom" iconSize={8} wrapperStyle={{ fontSize: '12px' }}/>
                                         </PieChart>
                                     </ResponsiveContainer>
                                 ) : (
@@ -301,8 +338,8 @@ export default function DoctorDashboard() {
                          <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-6 rounded-2xl text-white relative overflow-hidden">
                              <div className="relative z-10">
                                 <h3 className="font-bold text-lg mb-2">Connect with Patients</h3>
-                                <p className="text-slate-300 text-sm mb-4">You have {stats.activePatients} active patients under your care. Start a secure consultation.</p>
-                                <Link href="/doctor/messages" className="inline-block w-full py-3 bg-white text-slate-900 rounded-xl font-bold text-center hover:bg-emerald-50 transition-colors">
+                                <p className="text-slate-300 text-sm mb-4">You have active patients waiting. Start a consultation.</p>
+                                <Link href="/doctor/messages" className="inline-block w-full py-3 bg-white text-slate-900 rounded-xl font-bold text-center hover:bg-emerald-50 transition-colors shadow-lg">
                                     Open Consultations
                                 </Link>
                              </div>

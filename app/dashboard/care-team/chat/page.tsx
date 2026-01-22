@@ -78,7 +78,12 @@ export default function PatientChatPage() {
                 (payload) => {
                     if (payload.new.doctor_id === doctorId) {
                         // @ts-ignore
-                        setMessages(prev => [...prev, payload.new]);
+                        setMessages(prev => {
+                            // @ts-ignore
+                            if (prev.some(m => m.id === payload.new.id)) return prev;
+                            // @ts-ignore
+                            return [...prev, payload.new];
+                        });
                         scrollToBottom();
                     }
                 }
@@ -105,12 +110,16 @@ export default function PatientChatPage() {
         setMessages(prev => [...prev, optimisticMsg]);
         scrollToBottom();
 
-        await supabase.from('consultations').insert({
+        const { data, error } = await supabase.from('consultations').insert({
             doctor_id: doctor.id,
             patient_id: user!.id,
             sender_id: user!.id,
             message: msgContent
-        });
+        }).select().single();
+
+        if (data) {
+            setMessages(prev => prev.map(m => m.id === optimisticMsg.id ? data : m));
+        }
     };
 
     const scrollToBottom = () => {
@@ -136,8 +145,20 @@ export default function PatientChatPage() {
                     </div>
                 </div>
                 <div className="flex gap-2">
-                    <button className="p-2 text-gray-400 hover:bg-gray-50 rounded-full"><Phone className="w-5 h-5" /></button>
-                    <button className="p-2 text-gray-400 hover:bg-gray-50 rounded-full"><Video className="w-5 h-5" /></button>
+                    <button 
+                        onClick={() => window.open(`https://meet.jit.si/pregoway-${doctor.id}-${user!.id}`, '_blank')}
+                        className="p-2 text-gray-400 hover:bg-gray-50 rounded-full hover:text-brand-600 transition-colors"
+                        title="Call Doctor"
+                    >
+                        <Phone className="w-5 h-5" />
+                    </button>
+                    <button 
+                        onClick={() => window.open(`https://meet.jit.si/pregoway-${doctor.id}-${user!.id}`, '_blank')}
+                        className="p-2 text-gray-400 hover:bg-gray-50 rounded-full hover:text-brand-600 transition-colors"
+                        title="Video Call"
+                    >
+                        <Video className="w-5 h-5" />
+                    </button>
                 </div>
             </header>
 
