@@ -1,25 +1,42 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #f0f9ff;
-  --color-brand-100: #e0f2fe;
-  --color-brand-200: #bae6fd;
-  --color-brand-500: #0ea5e9;
-  --color-brand-600: #0284c7;
-  --color-brand-700: #0369a1;
-  --color-brand-800: #075985;
-  --color-brand-900: #0c4a6e;
-  --color-brand-950: #082f49;
+  /* Brand Colors - Deep Teal/Navy (Trust, Professionalism) */
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-800: #115e59;
+  --color-brand-900: #134e4a;
+  --color-brand-950: #042f2e;
 
-  --color-risk-green: #22c55e;
-  --color-risk-yellow: #eab308;
+  /* Accent Colors - Coral/Peach (Warmth, Emotion, Humanity) */
+  --color-accent-50: #fff1f2;
+  --color-accent-100: #ffe4e6;
+  --color-accent-200: #fecdd3;
+  --color-accent-300: #fda4af;
+  --color-accent-400: #fb7185;
+  --color-accent-500: #f43f5e;
+  --color-accent-600: #e11d48;
+  --color-accent-700: #be123c;
+  --color-accent-800: #9f1239;
+  --color-accent-900: #881337;
+  --color-accent-950: #4c0519;
+
+  /* Neutrals for Modern Clean Look */
+  --color-gray-50: #f9fafb;
+  --color-gray-900: #111827;
+
+  /* Semantic Colors */
+  --color-risk-green: #10b981;
+  --color-risk-yellow: #f59e0b;
   --color-risk-orange: #f97316;
   --color-risk-red: #ef4444;
 
-  --color-ai-light: #f3e8ff;
-  --color-ai-DEFAULT: #a855f7;
-  --color-ai-dark: #7e22ce;
-  
   --font-sans: var(--font-inter), ui-sans-serif, system-ui;
 
   --animate-blob: blob 7s infinite;
@@ -32,7 +49,16 @@
   }
 }
 
-/* Custom utilities if needed */
+/* Global Styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 antialiased;
+}
+
+/* Custom Hide Scrollbar */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

@@ -350,11 +350,11 @@ export default function DashboardPage() {
             <div className="space-y-4">
               <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm">
                 <h4 className="font-bold text-gray-700 mb-4 text-sm uppercase tracking-wide">Weight Trend</h4>
-                <HealthTrends type="WEIGHT" />
+                <HealthTrends type="WEIGHT" userId={authUser?.id || ''} />
               </div>
               <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm">
                 <h4 className="font-bold text-gray-700 mb-4 text-sm uppercase tracking-wide">BP Trend</h4>
-                <HealthTrends type="BP" />
+                <HealthTrends type="BP" userId={authUser?.id || ''} />
               </div>
             </div>
           )}

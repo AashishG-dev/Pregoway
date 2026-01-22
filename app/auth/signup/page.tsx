@@ -204,6 +204,15 @@ export default function SignUpPage() {
                     <p className="text-center text-xs text-gray-500 leading-relaxed">
                         By creating an account, you agree to our <Link href="#" className="underline">Terms of Service</Link> and <Link href="#" className="underline">Privacy Policy</Link>.
                     </p>
+                    
+                    <div className="mt-8 text-center border-t border-gray-100 pt-6">
+                        <p className="text-sm text-gray-500">
+                            Are you a Medical Professional?{" "}
+                            <Link href="/doctor/auth/signup" className="text-emerald-600 font-bold hover:underline">
+                                Apply as Partner
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

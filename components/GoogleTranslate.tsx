@@ -35,6 +35,7 @@ export default function GoogleTranslate() {
         // When React tries to remove a Text Node that it thinks is a direct child, 
         // but is now inside a <font> tag, it crashes with "The node to be removed is not a child of this node".
         const originalRemoveChild = Node.prototype.removeChild;
+        // @ts-ignore
         Node.prototype.removeChild = function (child) {
             if (child.parentNode !== this) {
                 if (process.env.NODE_ENV !== 'production') {
@@ -47,6 +48,7 @@ export default function GoogleTranslate() {
 
         // Also patch insertBefore just in case
         const originalInsertBefore = Node.prototype.insertBefore;
+        // @ts-ignore
         Node.prototype.insertBefore = function (newNode, referenceNode) {
             if (referenceNode && referenceNode.parentNode !== this) {
                 if (process.env.NODE_ENV !== 'production') {

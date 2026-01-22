@@ -152,6 +152,15 @@ export default function LoginPage() {
                             <span className="mr-2"></span> Apple
                         </button>
                     </div>
+
+                    <div className="mt-8 text-center border-t border-gray-100 pt-6">
+                        <p className="text-sm text-gray-500">
+                            Are you a Medical Professional?{" "}
+                            <Link href="/doctor/auth/login" className="text-emerald-600 font-bold hover:underline">
+                                Doctor Login
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 type AuthContextType = {
   user: User | null;
   session: Session | null;
+  role: 'doctor' | 'patient' | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ data: { user: User | null; session: Session | null }; error: any }>;
   signUp: (email: string, password: string, metadata?: any) => Promise<{ data: { user: User | null; session: Session | null }; error: any }>;
@@ -17,6 +18,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   session: null,
+  role: null,
   loading: true,
   signIn: async () => ({ data: { user: null, session: null }, error: null }),
   signUp: async () => ({ data: { user: null, session: null }, error: null }),
@@ -28,15 +30,35 @@ export const useAuth = () => useContext(AuthContext);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+  const [role, setRole] = useState<'doctor' | 'patient' | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  const fetchRole = async (userId: string) => {
+    // Check if user is in doctors table
+    const { data: doctor } = await supabase
+      .from('doctors')
+      .select('id')
+      .eq('id', userId)
+      .single();
+    
+    if (doctor) {
+      setRole('doctor');
+    } else {
+      setRole('patient');
+    }
+  };
 
   useEffect(() => {
     // 1. Check active session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
+      if (session?.user) {
+        fetchRole(session.user.id).then(() => setLoading(false));
+      } else {
+        setLoading(false);
+      }
     });
 
     // 2. Listen for changes
@@ -45,7 +67,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
+      if (session?.user) {
+        fetchRole(session.user.id).then(() => setLoading(false));
+      } else {
+        setRole(null);
+        setLoading(false);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -72,11 +99,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    setRole(null);
     router.push("/auth/login");
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, session, role, loading, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );
