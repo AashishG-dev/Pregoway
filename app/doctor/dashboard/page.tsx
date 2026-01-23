@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { AnalyticsCharts } from "@/components/doctor/AnalyticsCharts";
 import { AIInsightsPanel } from "@/components/doctor/AIInsightsPanel";
 import { PatientTable } from "@/components/doctor/PatientTable";
+import { PatientRequestsList } from "@/components/doctor/PatientRequestsList";
 
 export interface Patient {
     id: string;
@@ -78,28 +79,31 @@ export default function DoctorDashboard() {
     };
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="space-y-4 md:space-y-8 animate-in fade-in duration-500">
 
             {/* 1. Top Section: AI Insights (Hero-like) */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
                 <div className="lg:col-span-3">
                     <AIInsightsPanel />
                 </div>
-                <div className="lg:col-span-1 grid grid-cols-2 lg:grid-cols-1 gap-4">
+                <div className="lg:col-span-1 grid grid-cols-2 lg:grid-cols-1 gap-3 md:gap-4">
                     <StatCard
                         label="Critical Alerts"
                         value={stats.criticalAlerts}
-                        icon={<AlertTriangle className="w-5 h-5 text-red-500" />}
+                        icon={<AlertTriangle className="w-4 h-4 md:w-5 md:h-5 text-red-500" />}
                         color="border-red-200 bg-red-50 text-red-700"
                     />
                     <StatCard
                         label="Pending Requests"
                         value={stats.pendingRequests}
-                        icon={<Users className="w-5 h-5 text-indigo-500" />}
+                        icon={<Users className="w-4 h-4 md:w-5 md:h-5 text-indigo-500" />}
                         color="border-indigo-200 bg-indigo-50 text-indigo-700"
                     />
                 </div>
             </div>
+
+            {/* NEW: Patient Requests */}
+            <PatientRequestsList requests={requests} onUpdate={fetchDashboardData} />
 
             {/* 2. Middle Section: Analytics Charts */}
             <AnalyticsCharts />
@@ -113,12 +117,12 @@ export default function DoctorDashboard() {
 
 function StatCard({ label, value, icon, color }: { label: string, value: number, icon: React.ReactNode, color: string }) {
     return (
-        <div className={`p-4 rounded-2xl border flex flex-col justify-center h-full shadow-sm hover:shadow-md transition-shadow bg-white ${color.replace('text-', 'border-').replace('bg-', 'hover:bg-opacity-50 ')}`}>
-            <div className="flex items-center justify-between mb-2">
-                <div className="bg-white p-2 rounded-lg shadow-sm">{icon}</div>
-                <span className="text-2xl font-bold text-slate-800">{value}</span>
+        <div className={`p-3 md:p-4 rounded-xl md:rounded-2xl border flex flex-col justify-center h-full shadow-sm hover:shadow-md transition-shadow bg-white ${color.replace('text-', 'border-').replace('bg-', 'hover:bg-opacity-50 ')}`}>
+            <div className="flex items-center justify-between mb-1.5 md:mb-2">
+                <div className="bg-white p-1.5 md:p-2 rounded-lg shadow-sm border border-slate-100">{icon}</div>
+                <span className="text-xl md:text-2xl font-bold text-slate-800">{value}</span>
             </div>
-            <span className="text-sm font-medium opacity-80 text-slate-600">{label}</span>
+            <span className="text-xs md:text-sm font-medium opacity-90 text-slate-600 truncate">{label}</span>
         </div>
     )
 }
