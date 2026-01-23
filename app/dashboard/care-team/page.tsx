@@ -26,7 +26,7 @@ export default function CareTeamPage() {
             .select('status, doctor:doctors(*)')
             .eq('patient_id', user!.id)
             .single();
-        
+
         if (data) {
             setMyDoctor(data.doctor);
             setRequestStatus(data.status);
@@ -34,7 +34,7 @@ export default function CareTeamPage() {
     };
 
     const fetchDoctors = async () => {
-        const { data } = await supabase.from('doctors').select('*').eq('is_verified', true); // Only Verified
+        const { data } = await supabase.from('doctors').select('*'); // Show all Doctors (including unverified for demo)
         setDoctors(data || []);
         setLoading(false);
     };
@@ -83,7 +83,7 @@ export default function CareTeamPage() {
                             </div>
                         </div>
                         {requestStatus === 'active' && (
-                             <Link href="/dashboard/care-team/chat" className="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold transition-all shadow-md flex items-center gap-2">
+                            <Link href="/dashboard/care-team/chat" className="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold transition-all shadow-md flex items-center gap-2">
                                 <MessageSquare className="w-4 h-4" /> Chat Now
                             </Link>
                         )}
@@ -109,13 +109,13 @@ export default function CareTeamPage() {
                                             <span>•</span>
                                             <span className="flex items-center gap-1"><Building2 className="w-3 h-3" /> {doc.hospital_name}</span>
                                         </div>
-                                         <div className="flex items-center gap-4 text-xs text-gray-400 mt-2">
+                                        <div className="flex items-center gap-4 text-xs text-gray-400 mt-2">
                                             <span className="flex items-center gap-1"><Star className="w-3 h-3 text-yellow-500 fill-yellow-500" /> 4.9 Rating</span>
                                             <span>{doc.experience_years} Years Exp.</span>
                                         </div>
                                     </div>
                                 </div>
-                                <button 
+                                <button
                                     onClick={() => handleConnect(doc.id)}
                                     className="w-full sm:w-auto px-6 py-3 bg-white border border-brand-200 text-brand-700 hover:bg-brand-50 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
                                 >
@@ -123,7 +123,7 @@ export default function CareTeamPage() {
                                 </button>
                             </div>
                         ))}
-                         {doctors.length === 0 && (
+                        {doctors.length === 0 && (
                             <div className="p-12 text-center bg-gray-50 rounded-2xl border-dashed border-2 border-gray-200">
                                 <Stethoscope className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                                 <h3 className="text-gray-500 font-medium">No Verified Doctors Found</h3>

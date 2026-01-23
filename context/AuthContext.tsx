@@ -70,6 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
+        setLoading(true); // Ensure loading is true while we fetch role
         fetchRole(session.user.id).then(() => setLoading(false));
       } else {
         setRole(null);
