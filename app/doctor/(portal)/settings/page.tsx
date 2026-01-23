@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function SettingsPage() {
-    const { user, refreshSession } = useAuth(); // Assuming refreshSession or similar exists, or we force reload
+    const { user } = useAuth();
     const { toast } = useToast();
     const router = useRouter();
 
