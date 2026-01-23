@@ -38,6 +38,8 @@ export default function VaultPage() {
    const [selectedFile, setSelectedFile] = useState<File | null>(null);
    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
+   const [deleteId, setDeleteId] = useState<string | null>(null);
+   const [deletePath, setDeletePath] = useState<string | null>(null);
 
    // Analysis state
    const [analyzing, setAnalyzing] = useState(false);
@@ -156,14 +158,22 @@ export default function VaultPage() {
       if (data?.signedUrl) window.open(data.signedUrl, '_blank');
    };
 
-   const handleDelete = async (id: string, path: string) => {
-      if (!confirm("Remove this document and its data?")) return;
+   const handleDeleteClick = (id: string, path: string) => {
+      setDeleteId(id);
+      setDeletePath(path);
+   };
+
+   const confirmDelete = async () => {
+      if (!deleteId || !deletePath) return;
       try {
-         await supabase.from('documents').delete().eq('id', id);
-         await supabase.storage.from('vault').remove([path]);
-         setDocs(docs.filter(d => d.id !== id));
+         await supabase.from('documents').delete().eq('id', deleteId);
+         await supabase.storage.from('vault').remove([deletePath]);
+         setDocs(docs.filter(d => d.id !== deleteId));
       } catch (err) {
          console.error("Delete failed", err);
+      } finally {
+         setDeleteId(null);
+         setDeletePath(null);
       }
    };
 
@@ -286,7 +296,7 @@ export default function VaultPage() {
                               <button onClick={() => handleView(doc.file_url)} className="w-10 h-10 bg-gray-50 hover:bg-brand-600 hover:text-white rounded-xl flex items-center justify-center text-gray-400 transition-colors">
                                  <Eye className="w-5 h-5" />
                               </button>
-                              <button onClick={() => handleDelete(doc.id, doc.file_url)} className="w-10 h-10 bg-gray-50 hover:bg-red-50 hover:text-red-500 rounded-xl flex items-center justify-center text-gray-400 transition-colors opacity-0 group-hover:opacity-100">
+                              <button onClick={() => handleDeleteClick(doc.id, doc.file_url)} className="w-10 h-10 bg-gray-50 hover:bg-red-50 hover:text-red-500 rounded-xl flex items-center justify-center text-gray-400 transition-colors opacity-0 group-hover:opacity-100">
                                  <Trash2 className="w-5 h-5" />
                               </button>
                            </div>
@@ -379,6 +389,34 @@ export default function VaultPage() {
             </div>
          )}
 
+         {/* Delete Confirmation Modal */}
+         {deleteId && (
+            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/20 backdrop-blur-sm animate-in fade-in">
+               <div className="bg-white rounded-[2rem] p-8 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
+                  <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-6 mx-auto">
+                     <Trash2 className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-xl font-black text-center text-gray-900 mb-2">Delete Record?</h3>
+                  <p className="text-center text-gray-500 font-bold text-sm mb-8">This action cannot be undone. The file and its insights will be permanently removed.</p>
+                  
+                  <div className="flex gap-3">
+                     <button 
+                        onClick={() => setDeleteId(null)} 
+                        className="flex-1 py-4 rounded-xl font-bold text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors"
+                     >
+                        Cancel
+                     </button>
+                     <button 
+                        onClick={confirmDelete} 
+                        className="flex-1 py-4 rounded-xl font-bold text-white bg-red-500 hover:bg-red-600 shadow-xl shadow-red-200 transition-all active:scale-95"
+                     >
+                        Delete
+                     </button>
+                  </div>
+               </div>
+            </div>
+         )}
+         
          {isModalOpen && (
             <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-gray-900/40 backdrop-blur-sm animate-in fade-in transition-all">
                <div className="bg-white w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-8 shadow-2xl animate-in slide-in-from-bottom duration-300">

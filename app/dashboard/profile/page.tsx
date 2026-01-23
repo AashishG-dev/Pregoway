@@ -85,64 +85,84 @@ export default function ProfilePage() {
     if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-brand-600" /></div>;
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
+        <div className="min-h-screen bg-gray-50/50 flex flex-col font-outfit">
             {/* Header */}
-            <div className="bg-white p-4 sticky top-0 z-10 border-b border-gray-100 flex items-center gap-4">
-                <button onClick={() => router.back()} className="p-2 hover:bg-gray-100 rounded-full">
-                    <ArrowLeft className="w-6 h-6 text-gray-700" />
-                </button>
-                <h1 className="text-xl font-bold text-gray-900">Edit Profile</h1>
+            <div className="bg-white p-6 sticky top-0 z-20 border-b border-gray-100/80 backdrop-blur-md bg-white/80">
+                <div className="flex items-center gap-3">
+                    <button onClick={() => router.back()} className="p-2 -ml-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
+                        <ArrowLeft className="w-6 h-6" />
+                    </button>
+                    <h1 className="text-2xl font-bold text-gray-900">Your Profile</h1>
+                </div>
             </div>
 
-            <form onSubmit={handleSave} className="p-6 space-y-6 flex-1">
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+            <form onSubmit={handleSave} className="flex-1 max-w-2xl mx-auto w-full p-6 space-y-8">
+                
+                {/* Personal Info Card */}
+                <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 space-y-8 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-brand-50 rounded-bl-[4rem] -z-0"></div>
+                    
+                    <div className="relative z-10">
+                        <h2 className="text-lg font-bold text-gray-900 mb-1">Personal Details</h2>
+                        <p className="text-gray-500 text-sm mb-6">How should we address you?</p>
 
-                    {/* Name */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2 is-required">Full Name</label>
-                        <div className="relative">
-                            <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                        <label className="block text-sm font-bold text-gray-700 mb-3">Full Name</label>
+                        <div className="relative group">
+                            <User className="absolute left-4 top-4 w-5 h-5 text-gray-400 group-focus-within:text-brand-500 transition-colors" />
                             <input
                                 type="text"
                                 required
                                 value={formData.name}
                                 onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none"
-                                placeholder="Jane Doe"
+                                className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl font-medium text-gray-900 focus:ring-4 focus:ring-brand-100 focus:border-brand-300 outline-none transition-all placeholder-gray-400"
+                                placeholder="e.g. Sarah Smith"
                             />
                         </div>
                     </div>
+                </div>
 
-                    {/* LMP */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Last Milk Period (LMP)</label>
-                        <div className="relative">
-                            <Calendar className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                {/* Pregnancy Details Card */}
+                <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 space-y-8 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-[4rem] -z-0"></div>
+
+                    <div className="relative z-10">
+                        <h2 className="text-lg font-bold text-gray-900 mb-1">Pregnancy Timeline</h2>
+                        <p className="text-gray-500 text-sm mb-6">This helps us track your baby's growth.</p>
+
+                        <label className="block text-sm font-bold text-gray-700 mb-3">First Day of Last Period</label>
+                        <div className="relative group mb-4">
+                            <Calendar className="absolute left-4 top-4 w-5 h-5 text-gray-400 group-focus-within:text-purple-500 transition-colors" />
                             <input
                                 type="date"
                                 required
                                 value={formData.lmp}
                                 onChange={e => setFormData({ ...formData, lmp: e.target.value })}
-                                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none"
+                                className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl font-medium text-gray-900 focus:ring-4 focus:ring-purple-100 focus:border-purple-300 outline-none transition-all"
                             />
                         </div>
-                        <p className="text-xs text-brand-600 mt-2 bg-brand-50 p-2 rounded-lg inline-block">
-                            Changing this will recalculate your Timeline & Week.
-                        </p>
+                        
+                        <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 flex gap-3">
+                            <div className="w-1.5 bg-blue-400 rounded-full shrink-0"></div>
+                            <p className="text-sm text-blue-800 leading-relaxed font-medium">
+                                Updates to this date will automatically recalculate your <strong>Current Week</strong> and <strong>Timeline events</strong>.
+                            </p>
+                        </div>
                     </div>
-
                 </div>
+
             </form>
 
-            <div className="p-6 bg-white border-t border-gray-100 sticky bottom-0">
-                <button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="w-full bg-brand-600 text-white py-3.5 rounded-xl font-bold text-lg hover:bg-brand-700 transition-all active:scale-95 disabled:bg-gray-300 disabled:scale-100 flex items-center justify-center gap-2"
-                >
-                    {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-                    Save Changes
-                </button>
+            <div className="p-6 bg-white border-t border-gray-100 sticky bottom-0 z-30">
+                <div className="max-w-2xl mx-auto w-full">
+                    <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold text-lg hover:bg-black hover:shadow-xl hover:shadow-gray-200 transition-all active:scale-[0.98] disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none flex items-center justify-center gap-2"
+                    >
+                        {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                        Save Changes
+                    </button>
+                </div>
             </div>
         </div>
     );

@@ -20,6 +20,8 @@ import {
 import { Hero } from "@/components/ui/Hero";
 import { BentoGrid, BentoGridItem } from "@/components/ui/BentoGrid";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { CrisisSection } from "@/components/CrisisSection";
+import { StoriesMarquee } from "@/components/ui/StoriesMarquee";
 
 function LandingContent() {
   const { user, loading } = useAuth();
@@ -44,48 +46,8 @@ function LandingContent() {
       <Hero />
 
       {/* --- MISSION SECTION --- */}
-      <ScrollReveal width="100%" className="py-24 px-6 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div className="space-y-6">
-              <h2 className="text-sm font-bold text-brand-600 uppercase tracking-widest">The Reality</h2>
-              <h3 className="text-4xl font-bold text-gray-900 leading-tight">
-                Healthcare isn&apos;t just a service.<br />It&apos;s a lifeline.
-              </h3>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                In many rural and even urban areas, the lack of a proper roadmap and resource unavailability leads to tragic outcomes.
-                It&apos;s not just about biology; it&apos;s about <strong>management</strong>.
-              </p>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                When a mother suffers due to lack of guidance, it affects two lives.
-                We built Pregoway to be that missing link—a digital companion that ensures no mother walks this path alone.
-              </p>
-
-              <div className="grid grid-cols-2 gap-6 pt-4">
-                <div className="p-4 bg-risk-red/10 rounded-2xl border border-risk-red/20">
-                  <div className="text-3xl font-bold text-risk-red mb-1">45%</div>
-                  <div className="text-sm text-gray-600">High-risk pregnancies go undetected in rural areas.</div>
-                </div>
-                <div className="p-4 bg-brand-100 rounded-2xl border border-brand-200">
-                  <div className="text-3xl font-bold text-brand-700 mb-1">100%</div>
-                  <div className="text-sm text-gray-600">Dedication to changing this statistic.</div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="relative h-[500px] w-full rounded-3xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500 group">
-              <img
-                src="/images/rural.png"
-                alt="Rural connection"
-                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-8">
-                <p className="text-white font-medium">&quot;Technology bridges the distance between a village and a hospital.&quot;</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ScrollReveal>
+      {/* --- CRISIS SECTION (Replaces old Report) --- */}
+      <CrisisSection />
 
       {/* --- FEATURES / SOLUTION (Bento Grid) --- */}
       <section className="py-24 bg-gray-50 relative">
@@ -134,45 +96,14 @@ function LandingContent() {
       </section>
 
       {/* --- REAL STORIES --- */}
-      <section className="py-24 px-6 bg-white overflow-hidden">
+      {/* --- REAL STORIES MARQUEE --- */}
+      <section className="py-24 bg-white overflow-hidden">
         <ScrollReveal width="100%" animation="scale">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">Stories of Hope</h2>
-
-            <div className="relative bg-brand-900 rounded-[3rem] p-8 md:p-16 text-white flex flex-col md:flex-row items-center gap-12 overflow-hidden shadow-2xl">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-brand-700/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent-900/50 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
-
-              <div className="w-full md:w-1/2 relative z-10 transition-transform duration-500 hover:scale-[1.02]">
-                <img
-                  src="/images/story.png"
-                  alt="Mother and Child"
-                  className="rounded-2xl shadow-xl border-4 border-white/10"
-                />
-              </div>
-
-              <div className="w-full md:w-1/2 relative z-10">
-                <div className="text-brand-300 font-bold mb-4 flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5" />
-                  <span>Real Impact Case</span>
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold mb-6 italic leading-relaxed">
-                  &quot;I didn&apos;t know I had high BP until Pregoway alerted me.&quot;
-                </h3>
-                <p className="text-lg text-gray-200 leading-relaxed mb-8">
-                  Riya, from a small town in Madhya Pradesh, was facing improper management of her gestational hypertension.
-                  There were no specialists nearby. Pregoway's vitals tracker flagged her rising BP and guided her to the nearest district hospital just in time.
-                </p>
-                <div className="flex items-center gap-4 bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/10">
-                  <div className="w-12 h-12 bg-accent-500 rounded-full flex items-center justify-center font-bold text-xl text-white">R</div>
-                  <div>
-                    <div className="font-bold text-white">Riya Sharma</div>
-                    <div className="text-sm text-brand-200">Proud Mother of a healthy boy</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="max-w-6xl mx-auto mb-12 px-6 text-center">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Stories of Hope</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">See how Pregoway is changing lives across the country, from rural villages to metro cities.</p>
           </div>
+          <StoriesMarquee />
         </ScrollReveal>
       </section>
 

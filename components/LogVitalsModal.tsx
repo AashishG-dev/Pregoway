@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { X, Loader2, Activity } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { useToast } from "@/context/ToastContext";
 
 export default function LogVitalsModal({ isOpen, onClose, userId, onSuccess }: { isOpen: boolean, onClose: () => void, userId: string, onSuccess: () => void }) {
     const [type, setType] = useState('WEIGHT');
     const [value, setValue] = useState('');
     const [loading, setLoading] = useState(false);
+    const { toast } = useToast();
 
     if (!isOpen) return null;
 
@@ -29,9 +31,10 @@ export default function LogVitalsModal({ isOpen, onClose, userId, onSuccess }: {
             onSuccess();
             onClose();
             setValue('');
+            toast("Health data saved successfully!", "success");
         } catch (err) {
             console.error(err);
-            alert("Failed to save. Try again.");
+            toast("Failed to save. Try again.", "error");
         } finally {
             setLoading(false);
         }

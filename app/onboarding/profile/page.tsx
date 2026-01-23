@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { ArrowRight, Calendar, User, Loader2, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { addDays, format, differenceInWeeks } from "date-fns";
+import { addDays, format, differenceInWeeks, subWeeks } from "date-fns";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/context/ToastContext";
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { toast } = useToast();
   const { user, signOut } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -23,15 +25,39 @@ export default function ProfilePage() {
 
   const handleLmpChange = (dateStr: string) => {
     setFormData({ ...formData, lmp: dateStr });
-    if (dateStr) {
-      const lmpDate = new Date(dateStr);
-      // Naegele's rule: +1 year -3 months +7 days (approx 280 days)
-      const estimatedDueDate = addDays(lmpDate, 280);
-      setEdd(estimatedDueDate);
-
-      const weeks = differenceInWeeks(new Date(), lmpDate);
-      setWeek(weeks);
+    
+    if (!dateStr) {
+      setEdd(null);
+      setWeek(null);
+      return;
     }
+
+    const lmpDate = new Date(dateStr);
+    const today = new Date();
+
+    // 1. Future Date Check
+    if (lmpDate > today) {
+      toast("LMP cannot be in the future", "error");
+      setEdd(null);
+      setWeek(null);
+      return;
+    }
+
+    const weeksDiff = differenceInWeeks(today, lmpDate);
+
+    // 2. Too old check (> 42 weeks)
+    if (weeksDiff > 42) {
+      toast("LMP cannot be more than 42 weeks (9 months) ago.", "error");
+      setEdd(null);
+      setWeek(null);
+      return;
+    }
+    
+    // 3. Calculation
+    // Naegele's rule: +1 year -3 months +7 days (approx 280 days)
+    const estimatedDueDate = addDays(lmpDate, 280);
+    setEdd(estimatedDueDate);
+    setWeek(weeksDiff);
   };
 
   return (
@@ -88,6 +114,8 @@ export default function ProfilePage() {
               <Calendar className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
               <input
                 type="date"
+                max={new Date().toISOString().split('T')[0]} 
+                min={subWeeks(new Date(), 42).toISOString().split('T')[0]} // 42 weeks ago max
                 className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-brand-500 outline-none"
                 value={formData.lmp}
                 onChange={e => handleLmpChange(e.target.value)}
@@ -132,7 +160,7 @@ export default function ProfilePage() {
         <button
           onClick={async () => {
             if (!user) {
-              alert("No user session found. Please log in again.");
+              toast("No user session found. Please log in again.", "error");
               router.push('/auth/login');
               return;
             }
@@ -152,7 +180,7 @@ export default function ProfilePage() {
               if (error) throw error;
               router.push("/dashboard");
             } catch (err: any) {
-              alert(err.message);
+              toast(err.message, "error");
             } finally {
               setLoading(false);
             }

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Pregoway</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #f9fafb;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .header {
+      background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .logo-text {
+      color: #ffffff;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin: 0;
+    }
+    .content {
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .icon-heart {
+      font-size: 40px;
+      margin-bottom: 20px;
+      display: block;
+    }
+    h1 {
+      color: #111827;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      margin-top: 0;
+    }
+    p {
+      color: #4b5563;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #db2777; /* Brand Pink/Accent */
+      color: #ffffff;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 50px;
+      margin-top: 10px;
+      margin-bottom: 30px;
+      transition: background-color 0.2s;
+      box-shadow: 0 4px 14px 0 rgba(219, 39, 119, 0.39);
+    }
+    .btn:hover {
+      background-color: #be185d;
+    }
+    .footer {
+      background-color: #f3f4f6;
+      padding: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .footer a {
+      color: #6b7280;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <!-- You can replace this text with an <img> tag pointing to your hosted logo URL -->
+      <h1 class="logo-text">Pregoway</h1>
+    </div>
+    
+    <div class="content">
+      <span class="icon-heart">💖</span>
+      
+      <h1>Welcome to the Family</h1>
+      
+      <p>
+        We are honored to be part of your journey. Whether you are an expectant mother embarking on a beautiful new chapter, or a medical professional dedicated to saving lives, we are here to support you every step of the way.
+      </p>
+      
+      <p>
+        Please confirm your email address to securely access your account and begin.
+      </p>
+
+      <!-- Supabase variable for the link -->
+      <a href="{{ .ConfirmationURL }}" class="btn">Confirm Email Address</a>
+      
+      <p style="font-size: 13px; color: #9ca3af;">
+        If you didn't create an account, you can safely ignore this email.
+      </p>
+    </div>
+
+    <div class="footer">
+      <p>&copy; 2026 Pregoway Inc. • Saving Lives, Two at a Time.</p>
+      <p>
+        <a href="#">Privacy Policy</a> • <a href="#">Support</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

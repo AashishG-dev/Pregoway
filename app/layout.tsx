@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 import { AuthProvider } from "@/context/AuthContext";
+import { ToastProvider } from "@/context/ToastContext";
 import GoogleTranslate from "@/components/GoogleTranslate";
 
 export default function RootLayout({
@@ -24,11 +26,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${inter.variable} font-sans antialiased bg-gray-50 text-gray-900`}
+        className={`${poppins.variable} font-sans antialiased bg-gray-50 text-gray-900`}
       >
         <AuthProvider>
-          {children}
-          <GoogleTranslate />
+          <ToastProvider>
+            {children}
+            <GoogleTranslate />
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>

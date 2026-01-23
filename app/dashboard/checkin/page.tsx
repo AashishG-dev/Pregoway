@@ -60,6 +60,8 @@ export default function CheckInPage() {
   const [step, setStep] = useState(0); // 0 = Intro, 1 = Q1, etc.
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [voiceNote, setVoiceNote] = useState("");
 
   // Derived
   const currentQuestion = step > 0 ? questionQueue[step - 1] : null;
@@ -68,6 +70,35 @@ export default function CheckInPage() {
   const handleAnswer = (val: any) => {
     if (!currentQuestion) return;
     setAnswers({ ...answers, [currentQuestion.id]: val });
+  };
+
+  const toggleListening = () => {
+    if (isListening) {
+      setIsListening(false);
+      // Stop logic handled by browser usually, but we can force stop if we had the ref
+      return;
+    }
+
+    if (!('webkitSpeechRecognition' in window)) {
+      alert("Voice recognition not supported in this browser.");
+      return;
+    }
+
+    const recognition = new (window as any).webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => setIsListening(true);
+    recognition.onend = () => setIsListening(false);
+    
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setVoiceNote(prev => prev ? prev + ". " + transcript : transcript);
+      // Auto-answer logic could go here if sophisticated
+    };
+
+    recognition.start();
   };
 
   const handleNext = async () => {
@@ -100,7 +131,7 @@ export default function CheckInPage() {
       // 1. Daily Checkin
       const { error: checkinError } = await supabase.from('daily_checkins').insert({
         user_id: authUser.id,
-        data: answers,
+        data: { ...answers, voice_note: voiceNote },
         date: new Date().toISOString().split('T')[0]
       });
       if (checkinError) throw checkinError;
@@ -301,6 +332,13 @@ export default function CheckInPage() {
             </div>
           )}
 
+          {/* Voice Note Display */}
+          {voiceNote && (
+             <div className="p-4 bg-purple-50 rounded-2xl border border-purple-100 text-purple-700 text-sm italic">
+               <span className="font-bold not-italic">Voice Note:</span> "{voiceNote}"
+             </div>
+          )}
+
           {currentQuestion?.type === 'multi' && (
             <div className="space-y-3">
               {currentQuestion.options?.map((opt: string) => (
@@ -333,7 +371,10 @@ export default function CheckInPage() {
 
       <div className="flex gap-4 mt-auto max-w-lg mx-auto w-full">
         {/* Voice Input Placeholder - Future Feature */}
-        <button className="p-4 bg-white rounded-2xl text-gray-400 border border-gray-200 hover:text-brand-500 hover:border-brand-200 transition-colors shadow-sm">
+        <button
+           onClick={toggleListening}
+           className={cn("p-4 rounded-2xl border transition-all shadow-sm", isListening ? "bg-red-50 text-red-600 border-red-200 animate-pulse" : "bg-white text-gray-400 border-gray-200 hover:text-brand-500 hover:border-brand-200")}
+        >
           <Mic className="w-6 h-6" />
         </button>
         <button

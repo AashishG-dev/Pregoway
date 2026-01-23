@@ -74,7 +74,7 @@ export default function DashboardPage() {
         setUser({
           name: profile.name,
           week: profile.current_week,
-          daysToGo: 280 - (profile.current_week * 7)
+          daysToGo: Math.max(0, 280 - (profile.current_week * 7))
         });
       }
 
@@ -85,7 +85,7 @@ export default function DashboardPage() {
         .eq('user_id', authUser.id)
         .order('created_at', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (riskLog) {
         setRisk({
@@ -132,7 +132,7 @@ export default function DashboardPage() {
         .gte('event_date', new Date().toISOString())
         .order('event_date', { ascending: true })
         .limit(1)
-        .single();
+        .maybeSingle();
 
       setAppointment(nextAppt);
     }
@@ -152,8 +152,11 @@ export default function DashboardPage() {
       <header className="px-6 pt-12 pb-6 sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-100 shadow-sm">
         <div className="flex justify-between items-start mb-6">
           <div>
-            <p className="text-gray-400 text-sm font-bold uppercase tracking-wider mb-1">Good Morning,</p>
-            <h1 className="text-3xl font-black text-gray-900 tracking-tight">{user.name}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
+              <span className="bg-brand-100 p-2 rounded-xl"><Baby className="w-6 h-6 text-brand-700" /></span>
+              {user.name}
+            </h1>
+            <p className="text-gray-500 text-xs font-medium ml-1 mt-1">Pregnancy Dashboard</p>
           </div>
           <div className="flex gap-3 items-center">
             {/* Language Switcher Target */}
@@ -198,8 +201,9 @@ export default function DashboardPage() {
 
           <div className="flex items-center justify-between relative z-10">
             <div className="flex items-center gap-5">
-              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-sm ring-1 ring-gray-100">
-                👶
+              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm ring-1 ring-gray-50 relative overflow-hidden group">
+                 <div className="absolute inset-0 bg-sky-50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                 <Baby className="w-8 h-8 text-sky-500 relative z-10" />
               </div>
               <div>
                 <span className="inline-block bg-sky-100 text-sky-700 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full mb-1.5">Week {user.week}</span>
@@ -276,7 +280,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Appointment */}
-          <Link href={appointment ? "/dashboard/timeline" : "#"} className={cn("p-6 rounded-3xl border shadow-sm flex flex-col justify-between h-40 transition-all hover:shadow-md group", appointment ? "bg-white border-brand-100" : "bg-white border-dashed border-gray-200")}>
+          <Link href="/dashboard/timeline" className={cn("p-6 rounded-3xl border shadow-sm flex flex-col justify-between h-40 transition-all hover:shadow-md group", appointment ? "bg-white border-brand-100" : "bg-white border-dashed border-gray-200")}>
             {appointment ? (
               <>
                 <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-3 group-hover:scale-110 transition-transform">

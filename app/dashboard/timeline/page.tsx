@@ -37,6 +37,12 @@ export default function TimelinePage() {
   const [events, setEvents] = useState<TimelineEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentWeek, setCurrentWeek] = useState(0);
+  
+  // Reschedule Modal State
+  const [rescheduleId, setRescheduleId] = useState<string | null>(null);
+  const [newDateInput, setNewDateInput] = useState("");
+  const [isRescheduling, setIsRescheduling] = useState(false);
+  const [undoId, setUndoId] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadTimeline() {
@@ -160,10 +166,43 @@ export default function TimelinePage() {
   };
 
   const handleMarkDone = (id?: string) => id && updateStatus(id, 'completed');
-  const handleUndo = (id?: string) => {
+  const handleUndoClick = (id?: string) => {
     if (!id) return;
-    if (confirm("Mark this item as incomplete?")) {
-      updateStatus(id, 'pending');
+    setUndoId(id);
+  };
+
+  const confirmUndo = () => {
+    if (!undoId) return;
+    updateStatus(undoId, 'pending');
+    setUndoId(null);
+  };
+
+  const handleRescheduleClick = (id?: string) => {
+    if (!id) return;
+    setRescheduleId(id);
+    setNewDateInput(format(new Date(), "yyyy-MM-dd")); // Default to today
+    setIsRescheduling(true);
+  };
+
+  const confirmReschedule = async () => {
+    if (!rescheduleId || !newDateInput) return;
+
+    // Updates
+    setEvents(prev => prev.map(e => e.id === rescheduleId ? { ...e, event_date: new Date(newDateInput).toISOString(), formattedDate: format(new Date(newDateInput), "MMM d, yyyy") } : e));
+
+    try {
+      const { error } = await supabase
+        .from('health_timeline')
+        .update({ event_date: new Date(newDateInput).toISOString() })
+        .eq('id', rescheduleId);
+
+        if (error) throw error;
+    } catch (err) {
+      console.error("Reschedule failed:", err);
+      alert("Failed to save reschedule");
+    } finally {
+      setIsRescheduling(false);
+      setRescheduleId(null);
     }
   };
 
@@ -263,7 +302,11 @@ export default function TimelinePage() {
                       <CheckCircle2 className="w-4 h-4" />
                       Mark Complete
                     </button>
-                    <button className="px-4 py-3 bg-white text-gray-500 border border-gray-200 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors">
+
+                    <button 
+                      onClick={() => handleRescheduleClick(event.id)}
+                      className="px-4 py-3 bg-white text-gray-500 border border-gray-200 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors"
+                    >
                       Reschedule
                     </button>
                   </div>
@@ -283,7 +326,7 @@ export default function TimelinePage() {
                       <CheckCircle2 className="w-4 h-4" /> COMPLETED
                     </div>
                     <button
-                      onClick={() => handleUndo(event.id)}
+                      onClick={() => handleUndoClick(event.id)}
                       className="text-xs text-gray-400 hover:text-red-500 transition-colors font-medium"
                     >
                       Undo Action
@@ -295,6 +338,64 @@ export default function TimelinePage() {
           ))}
         </div>
       </div>
+
+      {/* Reschedule Modal Overlay */}
+      {isRescheduling && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Reschedule Visit</h3>
+            <p className="text-gray-500 text-sm mb-6">Select a new date for this appointment.</p>
+            
+            <label className="block text-xs font-bold text-gray-700 uppercase mb-2">New Date</label>
+            <input 
+              type="date" 
+              value={newDateInput}
+              onChange={(e) => setNewDateInput(e.target.value)}
+              className="w-full p-4 bg-gray-50 border-gray-200 rounded-xl font-medium text-gray-900 focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all mb-6"
+            />
+            
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setIsRescheduling(false)}
+                className="flex-1 py-3 px-4 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmReschedule}
+                className="flex-1 py-3 px-4 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-lg shadow-brand-200 transition-all active:scale-95"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Undo Confirmation Modal */}
+      {undoId && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Undo Completion?</h3>
+            <p className="text-gray-500 text-sm mb-6">This will mark the event as pending again.</p>
+            
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setUndoId(null)}
+                className="flex-1 py-3 px-4 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmUndo}
+                className="flex-1 py-3 px-4 rounded-xl font-bold text-white bg-gray-900 hover:bg-black shadow-lg transition-all active:scale-95"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

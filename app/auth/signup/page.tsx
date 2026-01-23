@@ -5,6 +5,7 @@ import { ArrowRight, Loader2, Heart, Lock, Mail, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/context/ToastContext";
 
 export default function SignUpPage() {
     const [email, setEmail] = useState("");
@@ -14,6 +15,7 @@ export default function SignUpPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { signUp } = useAuth();
+    const { toast } = useToast();
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -36,7 +38,7 @@ export default function SignUpPage() {
             if (error) {
                 // Handle "User already registered" explicitly
                 if (error.message.includes("registered") || error.message.includes("exists")) {
-                    alert("This email is already registered. Please Log In.");
+                    toast("This email is already registered. Please Log In.", "info");
                     router.push("/auth/login");
                     return;
                 }
@@ -45,7 +47,7 @@ export default function SignUpPage() {
 
             if (data.user && !data.session) {
                 // Email confirmation required (or existing user resend)
-                alert("Confirmation email sent! Please check your inbox (and spam folder) to verify your account.");
+                toast("Confirmation email sent! Please check your inbox.", "success");
                 router.push("/auth/login");
                 return;
             }
